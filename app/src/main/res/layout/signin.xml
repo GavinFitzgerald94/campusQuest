@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#fff"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/ucd"
+            android:layout_width="100dp"
+            android:layout_height="201dp"
+            android:src="@drawable/UCD" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CampusQuest"
+            android:layout_toRightOf="@+id/ucd"
+            android:textColor="#000"
+            android:layout_marginLeft="20dp"
+            android:textSize="25dp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+        <EditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:background="@drawable/custome_edit_text_bg"
+            android:drawableLeft="@drawable/ic_username"
+            android:layout_marginBottom="20dp"/>
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:background="@drawable/custome_edit_text_bg"
+            android:drawableLeft="@drawable/ic_password"
+            android:layout_marginBottom="10dp"/>
+        <Button
+            android:id="@+id/signin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign In"
+            android:theme="@style/MyButton"
+            android:layout_marginBottom="50dp"/>
+        <Button
+            android:id="@+id/signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up" />
+
+</LinearLayout>
