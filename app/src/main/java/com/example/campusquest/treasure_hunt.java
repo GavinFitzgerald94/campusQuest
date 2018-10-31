@@ -47,7 +47,10 @@ public class treasure_hunt extends AppCompatActivity implements
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0x1001;
     public static final String TAG = "StepCounter";
     private Button mButtonViewToday;
-    //TextView steps = (TextView)findViewById(R.id.steps);
+    private double userLat;
+    private double userLng;
+    private boolean foundClue;
+
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -98,6 +101,8 @@ public class treasure_hunt extends AppCompatActivity implements
         } else {
             recordSteps();
         }
+
+        //SQL Query to get Quest Name, stage id and clue and set various textViews
     }
 
 
@@ -212,6 +217,14 @@ public class treasure_hunt extends AppCompatActivity implements
 
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("HistoryAPI", "onConnected");
+    }
+
+
+    //Maybe run on time interval as thread?
+    public void atDestination(double lat, double lng) {
+
+        foundClue = false;
+
     }
 
 }
