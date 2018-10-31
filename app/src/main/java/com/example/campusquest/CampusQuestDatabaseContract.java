@@ -62,6 +62,8 @@ public final class CampusQuestDatabaseContract {
         public static final String COLUMN_CLUE_TEXT = "clue_text";
         public static final String COLUMN_CLUE_LAT = "clue_lat";
         public static final String COLUMN_CLUE_LONG = "clue_long";
+        public static final String COLUMN_CLUE_STAGE = "clue_stage";
+
 
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
@@ -70,10 +72,7 @@ public final class CampusQuestDatabaseContract {
                         COLUMN_QUEST_ID + " TEXT NOT NULL, " +
                         COLUMN_CLUE_TEXT + " TEXT NOT NULL, " +
                         COLUMN_CLUE_LAT + " NUMERIC, " +
-                        COLUMN_CLUE_LONG + " NUMERIC)";
+                        COLUMN_CLUE_LONG + " NUMERIC, " +
+                        COLUMN_CLUE_STAGE + " NUMERIC)";
     }
-
-    //TODO: OTHER/FUTURE TABLES
-    //HealthLog
-    //Routes
 }
