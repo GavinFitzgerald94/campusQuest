@@ -16,7 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".DisplaySteps"></activity>
+        <activity android:name=".DisplaySteps" />
+        <activity
+            android:name=".treasure_hunt"
+            android:label="@string/title_activity_treasure_hunt"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
