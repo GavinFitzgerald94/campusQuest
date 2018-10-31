@@ -39,7 +39,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
 
-public class treasure_hunt extends AppCompatActivity implements
+public class TreasureHunt extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener{

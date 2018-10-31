@@ -1,6 +1,5 @@
 package com.example.campusquest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     /** Called when the user taps the Send button */
     public void countSteps(View view) {
-        Intent intent = new Intent(this, treasure_hunt.class);
+        Intent intent = new Intent(this, TreasureHunt.class);
         // temporary database test
         SQLiteDatabase sqLiteDatabase = mDbOpenHelper.getReadableDatabase(); // sluggish way of accessing database!
         startActivity(intent);

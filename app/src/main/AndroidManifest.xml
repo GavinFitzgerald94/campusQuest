@@ -18,7 +18,7 @@
         </activity>
         <activity android:name=".DisplaySteps" />
         <activity
-            android:name=".treasure_hunt"
+            android:name=".TreasureHunt"
             android:label="@string/title_activity_treasure_hunt"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
