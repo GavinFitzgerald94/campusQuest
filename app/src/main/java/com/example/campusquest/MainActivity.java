@@ -26,8 +26,12 @@ public class MainActivity extends AppCompatActivity {
     /** Called when the user taps the Send button */
     public void countSteps(View view) {
         Intent intent = new Intent(this, TreasureHunt.class);
-        // temporary database test
-        SQLiteDatabase sqLiteDatabase = mDbOpenHelper.getReadableDatabase(); // sluggish way of accessing database!
+        startActivity(intent);
+    }
+
+    /** Navigates use to the treasure hunt game page **/
+    public void navigateToTreasureHuntHome(View view) {
+        Intent intent = new Intent(this, TreasureHuntHome.class);
         startActivity(intent);
     }
 
