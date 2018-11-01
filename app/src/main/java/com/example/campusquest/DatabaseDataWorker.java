@@ -61,4 +61,5 @@ public class DatabaseDataWorker {
         long newRowId = mDb.insert(CampusQuestDatabaseContract.CluesInfoEntry.TABLE_NAME, null, values);
     }
 
+
 }

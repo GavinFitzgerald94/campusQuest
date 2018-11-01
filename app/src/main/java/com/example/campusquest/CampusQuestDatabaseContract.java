@@ -46,13 +46,16 @@ public final class CampusQuestDatabaseContract {
         public static final String COLUMN_USERNAME = "user_name";
         public static final String COLUMN_QUEST_ID = "quest_id";
         public static final String COLUMN_CURRENT_STAGE = "current_stage";
+        public static final String COLUMN_COMPLETED = "completed";
 
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY, " +
                         COLUMN_USERNAME + " TEXT NOT NULL, " +
                         COLUMN_QUEST_ID + " TEXT NOT NULL, " +
-                        COLUMN_CURRENT_STAGE + " TEXT NOT NULL)";
+                        COLUMN_CURRENT_STAGE + " TEXT NOT NULL, " +
+                        COLUMN_COMPLETED + " NUMERIC ";
+
     }
 
     public static final class CluesInfoEntry implements BaseColumns {
