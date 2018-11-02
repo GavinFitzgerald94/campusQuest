@@ -21,7 +21,7 @@ public class DatabaseDataWorker {
     }
 
     public void insertClues() {
-        insertClue("CL01", "QU01", "Some clue text", 53.324363, -6.267018);
+        insertClue("CL01", "QU01", "...and she's buying a stairway to heaven.", 53.324363, -6.267018, 1);
     }
 
     public void insertUserQuestInfo() {
@@ -52,7 +52,7 @@ public class DatabaseDataWorker {
         long newRowId = mDb.insert(CampusQuestDatabaseContract.QuestsInfoEntry.TABLE_NAME, null, values);
     }
 
-    private void insertClue(String clueId, String questId, String clueText, double latitude, double longitude) {
+    private void insertClue(String clueId, String questId, String clueText, double latitude, double longitude, int stage) {
 
         ContentValues values = new ContentValues();
 
@@ -61,6 +61,7 @@ public class DatabaseDataWorker {
         values.put(CampusQuestDatabaseContract.CluesInfoEntry.COLUMN_CLUE_TEXT, clueText);
         values.put(CampusQuestDatabaseContract.CluesInfoEntry.COLUMN_CLUE_LAT, latitude);
         values.put(CampusQuestDatabaseContract.CluesInfoEntry.COLUMN_CLUE_LONG, longitude);
+        values.put(CampusQuestDatabaseContract.CluesInfoEntry.COLUMN_CLUE_STAGE, stage);
 
         long newRowId = mDb.insert(CampusQuestDatabaseContract.CluesInfoEntry.TABLE_NAME, null, values);
     }

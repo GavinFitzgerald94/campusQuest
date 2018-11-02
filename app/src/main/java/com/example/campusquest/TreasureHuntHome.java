@@ -18,6 +18,7 @@ public class TreasureHuntHome extends AppCompatActivity {
     private String mQuestId;
     private int mCurrStage = 1;
     private int mTotalStage;
+    private int mPrevStage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +32,13 @@ public class TreasureHuntHome extends AppCompatActivity {
         Button resumeButton = findViewById(R.id.button_resume_gamebutton);
         resumeButton.setVisibility(View.GONE);
 
-        if (loadLastGame()) {
+        if (checkPreviousGame()) {
             resumeButton.setVisibility(View.VISIBLE);
         }
     }
 
-    private boolean loadLastGame() {
+    // Convert to class to make async?
+    private boolean checkPreviousGame() {
         SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
         String questId = mQuestId;
@@ -57,7 +59,7 @@ public class TreasureHuntHome extends AppCompatActivity {
         if (lastQuestCursor.getCount() > 0) {
             int currStagePos = lastQuestCursor.getColumnIndex(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE);
             lastQuestCursor.moveToNext();
-            mCurrStage = lastQuestCursor.getInt(currStagePos);
+            mPrevStage = lastQuestCursor.getInt(currStagePos);
             return true;
         } else {
             return false;
@@ -95,6 +97,7 @@ public class TreasureHuntHome extends AppCompatActivity {
      * Resume existing game
      **/
     public void resumeGame(View view) {
+        mCurrStage = mPrevStage;
         Intent intent = new Intent(this, TreasureHuntNoFitTest.class);
         startActivity(intent);
     }
