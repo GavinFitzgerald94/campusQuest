@@ -17,11 +17,15 @@ public class DatabaseDataWorker {
 
     public void insertQuests() {
         insertQuest("QU01", "Treasure Hunt", 5);
-
+        insertQuest("QU02", "Spy Chase", 5);
     }
 
     public void insertClues() {
         insertClue("CL01", "QU01", "Some clue text", 53.324363, -6.267018);
+    }
+
+    public void insertUserQuestInfo() {
+        insertUserQuestInfo("testName", "QU01", 3, 0, "");
     }
 
     private void insertUser(String username, String password, String university, int age,
@@ -59,6 +63,19 @@ public class DatabaseDataWorker {
         values.put(CampusQuestDatabaseContract.CluesInfoEntry.COLUMN_CLUE_LONG, longitude);
 
         long newRowId = mDb.insert(CampusQuestDatabaseContract.CluesInfoEntry.TABLE_NAME, null, values);
+    }
+
+    private void insertUserQuestInfo(String userName, String questId, int currStage, int completed, String completionDate) {
+
+        ContentValues values = new ContentValues();
+
+        values.put(CampusQuestDatabaseContract.UserQuestsInfoEntry.COLUMN_USERNAME, userName);
+        values.put(CampusQuestDatabaseContract.UserQuestsInfoEntry.COLUMN_QUEST_ID, questId);
+        values.put(CampusQuestDatabaseContract.UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, currStage);
+        values.put(CampusQuestDatabaseContract.UserQuestsInfoEntry.COLUMN_COMPLETED, completed);
+        values.put(CampusQuestDatabaseContract.UserQuestsInfoEntry.COLUMN_COMPLETION_DATE, completionDate);
+
+        long newRowId = mDb.insert(CampusQuestDatabaseContract.UserQuestsInfoEntry.TABLE_NAME, null, values);
     }
 
 
