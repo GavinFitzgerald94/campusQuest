@@ -18,6 +18,17 @@
         android:text="@string/clickSteps"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.561"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.333" />
+
+    <Button
+        android:id="@+id/quests"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:onClick="navigateTreasureHuntHome"
+        android:text="Quests"
+        tools:layout_editor_absoluteX="124dp"
+        tools:layout_editor_absoluteY="63dp" />
 </android.support.constraint.ConstraintLayout>
