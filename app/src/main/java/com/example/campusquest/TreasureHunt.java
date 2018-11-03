@@ -3,6 +3,8 @@ package com.example.campusquest;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +16,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import static com.example.campusquest.CampusQuestDatabaseContract.*;
+
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.ConnectionResult;
@@ -42,14 +47,23 @@ import java.util.concurrent.TimeUnit;
 public class TreasureHunt extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener{
+        View.OnClickListener {
 
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0x1001;
     public static final String TAG = "StepCounter";
     private Button mButtonViewToday;
     private double userLat;
     private double userLng;
-    private boolean foundClue;
+    private CampusQuestOpenHelper mDbOpenHelper;
+    private String mQuestName;
+    private String mQuestId;
+    private int mCurrentStage;
+    private int mTotalStage;
+    private String mClueText;
+    private String mClueId;
+    private double mClueLat;
+    private double mClueLong;
+
 
 
     private GoogleApiClient mGoogleApiClient;
@@ -60,6 +74,17 @@ public class TreasureHunt extends AppCompatActivity implements
         setContentView(R.layout.activity_treasure_hunt);        //Set display content
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //Generic toolbar
         setSupportActionBar(toolbar);
+
+        mDbOpenHelper = new CampusQuestOpenHelper(this);
+
+        Bundle bundle = getIntent().getExtras();
+        mQuestName = bundle.getString("questName");
+        mQuestId = bundle.getString("questId");
+        mCurrentStage = bundle.getInt("currStage");
+        mTotalStage = bundle.getInt("totalStage");
+
+        loadClue();
+        initialiseViewContent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -106,6 +131,57 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
 
+    private void loadClue() {
+        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+
+        String questId = mQuestId;
+        String currStage = String.valueOf(mCurrentStage);
+        String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
+                + CluesInfoEntry.COLUMN_CLUE_STAGE + " == ?";
+
+        String[] selectionArgs = {questId, currStage};
+
+        String[] clueColumns = {
+                CluesInfoEntry.COLUMN_QUEST_ID,
+                CluesInfoEntry.COLUMN_CLUE_ID,
+                CluesInfoEntry.COLUMN_CLUE_TEXT,
+                CluesInfoEntry.COLUMN_CLUE_LAT,
+                CluesInfoEntry.COLUMN_CLUE_LONG,
+                CluesInfoEntry.COLUMN_CLUE_STAGE};
+
+        Cursor clueCursor = db.query(CluesInfoEntry.TABLE_NAME, clueColumns,
+                selection, selectionArgs, null, null, null);
+
+        int clueIdPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
+        int clueTextPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_TEXT);
+        int clueLatPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LAT);
+        int clueLongPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LONG);
+
+        if (clueCursor.getCount() > 0) {
+            clueCursor.moveToNext();
+            mClueId = clueCursor.getString(clueIdPos);
+            mClueText = clueCursor.getString(clueTextPos);
+            mClueLat = clueCursor.getDouble(clueLatPos);
+            mClueLong = clueCursor.getDouble(clueLongPos);
+        }
+    }
+
+    private void initialiseViewContent() {
+
+        TextView questValue = findViewById(R.id.quest_value);
+        questValue.setText(mQuestName);
+
+        TextView currStageValue = findViewById(R.id.curr_stage_value);
+        currStageValue.setText(String.valueOf(mCurrentStage));
+
+        TextView totalStageValue  = findViewById(R.id.total_stage_value);
+        totalStageValue.setText(String.valueOf(mTotalStage));
+
+        TextView clueValue = findViewById(R.id.clue_value);
+        clueValue.setText(mClueText);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -115,7 +191,9 @@ public class TreasureHunt extends AppCompatActivity implements
         }
     }
 
-    /** Creates Recording subscription */
+    /**
+     * Creates Recording subscription
+     */
     private void recordSteps() {
         // To create a subscription, invoke the Recording API. As soon as the subscription is
         // active, fitness data will start recording.
@@ -166,7 +244,9 @@ public class TreasureHunt extends AppCompatActivity implements
 //        }
 //    }
 
-    /** Accesses google fit history and displays total steps onscreen. */
+    /**
+     * Accesses google fit history and displays total steps onscreen.
+     */
     private class CountStepsToday extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
 
@@ -184,8 +264,8 @@ public class TreasureHunt extends AppCompatActivity implements
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        TextView steps = (TextView)findViewById(R.id.steps);
-                        steps.setText(""+ finalTotal);
+                        TextView steps = (TextView) findViewById(R.id.steps);
+                        steps.setText("" + finalTotal);
                     }
                 });
 
@@ -199,7 +279,9 @@ public class TreasureHunt extends AppCompatActivity implements
         }
     }
 
-    /** Initialises and executes CountStepsToday on click */
+    /**
+     * Initialises and executes CountStepsToday on click
+     */
     @Override
     public void onClick(View v) {
         new CountStepsToday().execute();
@@ -223,8 +305,13 @@ public class TreasureHunt extends AppCompatActivity implements
     //Maybe run on time interval as thread?
     public void atDestination(double lat, double lng) {
 
-        foundClue = false;
+        //foundClue = false;
 
+    }
+
+    protected void onDestroy() {
+        super.onDestroy();
+        mDbOpenHelper.close();
     }
 
 }

@@ -83,7 +83,7 @@ public class TreasureHuntHome extends AppCompatActivity {
      * Passes a bundle consisting of current stage, total stages, questName, questId
      **/
     public void newGame(View view) {
-        Intent intent = new Intent(this, TreasureHuntNoFitTest.class);
+        Intent intent = new Intent(this, TreasureHunt.class);
         Bundle bundle = new Bundle();
         bundle.putInt("currStage", mCurrStage);
         bundle.putInt("totalStage", mTotalStage);
