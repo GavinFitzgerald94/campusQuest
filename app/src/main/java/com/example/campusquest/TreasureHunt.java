@@ -88,7 +88,6 @@ public class TreasureHunt extends AppCompatActivity implements
         mCurrentStage = bundle.getInt("currStage");
         mTotalStage = bundle.getInt("totalStage");
 
-        //loadClue();
         getLoaderManager().initLoader(LOADER_CLUE, null, this);
         initialiseViewContent();
 
@@ -137,41 +136,6 @@ public class TreasureHunt extends AppCompatActivity implements
         //SQL Query to get Quest Name, stage id and clue and set various textViews
     }
 
-
-//    private void loadClue() {
-//        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
-//
-//        String questId = mQuestId;
-//        String currStage = String.valueOf(mCurrentStage);
-//        String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
-//                + CluesInfoEntry.COLUMN_CLUE_STAGE + " == ?";
-//
-//        String[] selectionArgs = {questId, currStage};
-//
-//        String[] clueColumns = {
-//                CluesInfoEntry.COLUMN_QUEST_ID,
-//                CluesInfoEntry.COLUMN_CLUE_ID,
-//                CluesInfoEntry.COLUMN_CLUE_TEXT,
-//                CluesInfoEntry.COLUMN_CLUE_LAT,
-//                CluesInfoEntry.COLUMN_CLUE_LONG,
-//                CluesInfoEntry.COLUMN_CLUE_STAGE};
-//
-//        Cursor clueCursor = db.query(CluesInfoEntry.TABLE_NAME, clueColumns,
-//                selection, selectionArgs, null, null, null);
-//
-//        int clueIdPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
-//        int clueTextPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_TEXT);
-//        int clueLatPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LAT);
-//        int clueLongPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LONG);
-//
-//        if (clueCursor.getCount() > 0) {
-//            clueCursor.moveToNext();
-//            mClueId = clueCursor.getString(clueIdPos);
-//            mClueText = clueCursor.getString(clueTextPos);
-//            mClueLat = clueCursor.getDouble(clueLatPos);
-//            mClueLong = clueCursor.getDouble(clueLongPos);
-//        }
-//    }
 
     private void initialiseViewContent() {
 
@@ -224,13 +188,13 @@ public class TreasureHunt extends AppCompatActivity implements
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         CursorLoader loader = null;
         if (id == LOADER_CLUE)
-            loader = CreateLoaderClue();
+            loader = createLoaderClue();
 
         return loader;
     }
 
     @SuppressLint("StaticFieldLeak")
-    private CursorLoader CreateLoaderClue() {
+    private CursorLoader createLoaderClue() {
         return new CursorLoader(this) {
             @Override
             public Cursor loadInBackground() {
