@@ -1,7 +1,11 @@
 package com.example.campusquest;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.os.AsyncTask;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -47,10 +51,13 @@ import java.util.concurrent.TimeUnit;
 public class TreasureHunt extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener {
+        View.OnClickListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final int ID = 0;
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0x1001;
     public static final String TAG = "StepCounter";
+    public static final int LOADER_CLUE = 0;
     private Button mButtonViewToday;
     private double userLat;
     private double userLng;
@@ -63,10 +70,8 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mClueId;
     private double mClueLat;
     private double mClueLong;
-
-
-
     private GoogleApiClient mGoogleApiClient;
+    private Cursor mClueCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +88,10 @@ public class TreasureHunt extends AppCompatActivity implements
         mCurrentStage = bundle.getInt("currStage");
         mTotalStage = bundle.getInt("totalStage");
 
-        loadClue();
+        //loadClue();
+        getLoaderManager().initLoader(LOADER_CLUE, null, this);
         initialiseViewContent();
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -131,40 +138,40 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
 
-    private void loadClue() {
-        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
-
-        String questId = mQuestId;
-        String currStage = String.valueOf(mCurrentStage);
-        String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
-                + CluesInfoEntry.COLUMN_CLUE_STAGE + " == ?";
-
-        String[] selectionArgs = {questId, currStage};
-
-        String[] clueColumns = {
-                CluesInfoEntry.COLUMN_QUEST_ID,
-                CluesInfoEntry.COLUMN_CLUE_ID,
-                CluesInfoEntry.COLUMN_CLUE_TEXT,
-                CluesInfoEntry.COLUMN_CLUE_LAT,
-                CluesInfoEntry.COLUMN_CLUE_LONG,
-                CluesInfoEntry.COLUMN_CLUE_STAGE};
-
-        Cursor clueCursor = db.query(CluesInfoEntry.TABLE_NAME, clueColumns,
-                selection, selectionArgs, null, null, null);
-
-        int clueIdPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
-        int clueTextPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_TEXT);
-        int clueLatPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LAT);
-        int clueLongPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LONG);
-
-        if (clueCursor.getCount() > 0) {
-            clueCursor.moveToNext();
-            mClueId = clueCursor.getString(clueIdPos);
-            mClueText = clueCursor.getString(clueTextPos);
-            mClueLat = clueCursor.getDouble(clueLatPos);
-            mClueLong = clueCursor.getDouble(clueLongPos);
-        }
-    }
+//    private void loadClue() {
+//        SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+//
+//        String questId = mQuestId;
+//        String currStage = String.valueOf(mCurrentStage);
+//        String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
+//                + CluesInfoEntry.COLUMN_CLUE_STAGE + " == ?";
+//
+//        String[] selectionArgs = {questId, currStage};
+//
+//        String[] clueColumns = {
+//                CluesInfoEntry.COLUMN_QUEST_ID,
+//                CluesInfoEntry.COLUMN_CLUE_ID,
+//                CluesInfoEntry.COLUMN_CLUE_TEXT,
+//                CluesInfoEntry.COLUMN_CLUE_LAT,
+//                CluesInfoEntry.COLUMN_CLUE_LONG,
+//                CluesInfoEntry.COLUMN_CLUE_STAGE};
+//
+//        Cursor clueCursor = db.query(CluesInfoEntry.TABLE_NAME, clueColumns,
+//                selection, selectionArgs, null, null, null);
+//
+//        int clueIdPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
+//        int clueTextPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_TEXT);
+//        int clueLatPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LAT);
+//        int clueLongPos = clueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LONG);
+//
+//        if (clueCursor.getCount() > 0) {
+//            clueCursor.moveToNext();
+//            mClueId = clueCursor.getString(clueIdPos);
+//            mClueText = clueCursor.getString(clueTextPos);
+//            mClueLat = clueCursor.getDouble(clueLatPos);
+//            mClueLong = clueCursor.getDouble(clueLongPos);
+//        }
+//    }
 
     private void initialiseViewContent() {
 
@@ -174,11 +181,9 @@ public class TreasureHunt extends AppCompatActivity implements
         TextView currStageValue = findViewById(R.id.curr_stage_value);
         currStageValue.setText(String.valueOf(mCurrentStage));
 
-        TextView totalStageValue  = findViewById(R.id.total_stage_value);
+        TextView totalStageValue = findViewById(R.id.total_stage_value);
         totalStageValue.setText(String.valueOf(mTotalStage));
 
-        TextView clueValue = findViewById(R.id.clue_value);
-        clueValue.setText(mClueText);
     }
 
 
@@ -213,6 +218,85 @@ public class TreasureHunt extends AppCompatActivity implements
                         }
                     }
                 });
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = null;
+        if (id == LOADER_CLUE)
+            loader = CreateLoaderClue();
+
+        return loader;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private CursorLoader CreateLoaderClue() {
+        return new CursorLoader(this) {
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+
+                String questId = mQuestId;
+                String currStage = String.valueOf(mCurrentStage);
+                String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
+                        + CluesInfoEntry.COLUMN_CLUE_STAGE + " == ?";
+
+                String[] selectionArgs = {questId, currStage};
+
+                String[] clueColumns = {
+                        CluesInfoEntry.COLUMN_QUEST_ID,
+                        CluesInfoEntry.COLUMN_CLUE_ID,
+                        CluesInfoEntry.COLUMN_CLUE_TEXT,
+                        CluesInfoEntry.COLUMN_CLUE_LAT,
+                        CluesInfoEntry.COLUMN_CLUE_LONG,
+                        CluesInfoEntry.COLUMN_CLUE_STAGE};
+
+                return db.query(CluesInfoEntry.TABLE_NAME, clueColumns,
+                        selection, selectionArgs, null, null, null);
+
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if(loader.getId()==LOADER_CLUE)
+            loadFinishedNotes(data);
+
+    }
+
+    private void loadFinishedNotes(Cursor data) {
+        mClueCursor = data;
+
+        int clueIdPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
+        int clueTextPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_TEXT);
+        int clueLatPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LAT);
+        int clueLongPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LONG);
+
+        if (mClueCursor.getCount() > 0) {
+            mClueCursor.moveToNext();
+            mClueId = mClueCursor.getString(clueIdPos);
+            mClueText = mClueCursor.getString(clueTextPos);
+            mClueLat = mClueCursor.getDouble(clueLatPos);
+            mClueLong = mClueCursor.getDouble(clueLongPos);
+        }
+
+        displayClue();
+
+    }
+
+    private void displayClue() {
+        TextView clueValue = findViewById(R.id.clue_value);
+        clueValue.setText(mClueText);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if(loader.getId() == LOADER_CLUE) {
+            if(mClueCursor != null)
+                mClueCursor.close();
+        }
+
     }
 
 //    private void displayStepDataForToday() {
@@ -299,14 +383,6 @@ public class TreasureHunt extends AppCompatActivity implements
 
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("HistoryAPI", "onConnected");
-    }
-
-
-    //Maybe run on time interval as thread?
-    public void atDestination(double lat, double lng) {
-
-        //foundClue = false;
-
     }
 
     protected void onDestroy() {
