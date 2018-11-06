@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.campusquest">
-
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    //Put in sensor requirements here.
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -20,7 +21,8 @@
         <activity
             android:name=".treasure_hunt"
             android:label="@string/title_activity_treasure_hunt"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".stats"></activity>
     </application>
 
 </manifest>
