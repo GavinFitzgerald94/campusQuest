@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">campusQuest</string>
     <string name="clickSteps">Count Steps</string>
+    <string name="userLocation">null</string>
+    <string name="yourLocation">Your Location</string>
+    <string name="locationButton">Find your Location</string>
+    <string name="statsButton">Stats</string>
     <string name="steps">0</string>
     <string name="stepsToday">Steps Today</string>
     <string name="title_activity_treasure_hunt">Treasure Hunt</string>
