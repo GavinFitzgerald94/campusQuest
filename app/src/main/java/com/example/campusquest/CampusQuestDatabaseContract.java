@@ -57,8 +57,7 @@ public final class CampusQuestDatabaseContract {
                         COLUMN_QUEST_ID + " TEXT NOT NULL, " +
                         COLUMN_CURRENT_STAGE + " NUMERIC NOT NULL, " +
                         COLUMN_COMPLETED + " NUMERIC, " +
-                        COLUMN_COMPLETION_DATE + " TEXT)";
-
+                        COLUMN_COMPLETION_DATE + " DEFAULT CURRENT_TIMESTAMP)";
     }
 
     public static final class CluesInfoEntry implements BaseColumns {

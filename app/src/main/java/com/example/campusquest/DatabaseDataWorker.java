@@ -27,9 +27,9 @@ public class DatabaseDataWorker {
         insertClue("CL05", "QU01", "If the stores are all closed...(Sci West)", 53.308320, -6.225765, 5);
     }
 
-    public void insertUserQuestInfo() {
-        insertUserQuestInfo("testName", "QU01", 3, 0, "");
-    }
+//    public void insertUserQuestInfo() {
+//        insertUserQuestInfo("testName", "QU01", 3, 0, "");
+//    }
 
     private void insertUser(String username, String password, String university, int age,
                             double weight, String phone) {

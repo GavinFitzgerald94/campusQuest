@@ -29,7 +29,7 @@ public class DataManager {
     }
 
     public String getCurrentUserName() {
-        return "testName";
+        return "DataManagerTestName";
     }
 
     public List<QuestInfo> getQuests() {
@@ -75,5 +75,4 @@ public class DataManager {
 
         }
     }
-
 }

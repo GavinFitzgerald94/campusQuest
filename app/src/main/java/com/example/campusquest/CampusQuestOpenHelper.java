@@ -27,7 +27,7 @@ public class CampusQuestOpenHelper extends SQLiteOpenHelper {
         worker.insertSampleUser();
         worker.insertQuests();
         worker.insertClues();
-        worker.insertUserQuestInfo();
+        //worker.insertUserQuestInfo();
     }
 
     @Override

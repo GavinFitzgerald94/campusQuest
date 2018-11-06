@@ -3,12 +3,13 @@ package com.example.campusquest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.os.AsyncTask;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -21,32 +22,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import static com.example.campusquest.CampusQuestDatabaseContract.*;
-
-
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
-import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.FitnessStatusCodes;
-import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.result.DailyTotalResult;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-
-
-import java.text.DateFormat;
 import java.util.concurrent.TimeUnit;
+
+import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
+import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
+import static com.example.campusquest.DataManager.getInstance;
 
 public class TreasureHunt extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -58,6 +50,8 @@ public class TreasureHunt extends AppCompatActivity implements
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0x1001;
     public static final String TAG = "StepCounter";
     public static final int LOADER_CLUE = 0;
+    public static final int QUEST_COMPLETED = 1;
+    public static final int QUEST_INCOMPLETE = 0;
     private Button mButtonViewToday;
     private double userLat;
     private double userLng;
@@ -76,8 +70,8 @@ public class TreasureHunt extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_treasure_hunt);        //Set display content
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //Generic toolbar
+        setContentView(R.layout.activity_treasure_hunt);        // Set display content
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // Generic toolbar
         setSupportActionBar(toolbar);
 
         mDbOpenHelper = new CampusQuestOpenHelper(this);
@@ -134,7 +128,20 @@ public class TreasureHunt extends AppCompatActivity implements
         //SQL Query to get Quest Name, stage id and clue and set various textViews
     }
 
+    /**
+     * Write stage completion info to user quest table with timestamp.
+     */
+    public void stageCompleted() {
+        updateUserInfo();
+    }
+
+    public String getCurrentUser() {
+        DataManager data = getInstance(); // Gets current instance of data manager service.
+        return data.getCurrentUserName();
+    }
+
     public void updateClueFound(View view) {
+        stageCompleted();
         if (mCurrentStage != mTotalStage) {
             mCurrentStage += 1;
             loadCurrentStage();
@@ -142,6 +149,7 @@ public class TreasureHunt extends AppCompatActivity implements
         } else {
             String victory = "Quest Completed!";
             mClueText = victory;
+
             displayClue();
         }
     }
@@ -209,6 +217,23 @@ public class TreasureHunt extends AppCompatActivity implements
 
         return loader;
     }
+
+    private void updateUserInfo() {
+        ContentValues values = new ContentValues(0);
+
+        values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
+        values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
+        values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+        if (mCurrentStage == mTotalStage) {
+            values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
+        } else {
+            values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+        }
+
+        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+        long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
+    }
+
 
     @SuppressLint("StaticFieldLeak")
     private CursorLoader createLoaderClue() {
