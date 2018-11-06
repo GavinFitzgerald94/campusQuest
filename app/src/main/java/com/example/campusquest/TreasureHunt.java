@@ -20,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -86,8 +87,9 @@ public class TreasureHunt extends AppCompatActivity implements
 
     private float distanceThreshold;
     private OnDataPointListener mListener;
-    private double mClueLat;
-    private double mClueLong;
+    private float mClueLat;
+    private float mClueLong;
+    private float locationABSvalue;
     private GoogleApiClient mGoogleApiClient;
     private Cursor mClueCursor;
 
@@ -151,9 +153,6 @@ public class TreasureHunt extends AppCompatActivity implements
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
         }
 
-        //SQL Query to get Quest Name, stage id, current stage, totalStages, clue and set various textViews
-        //clueLat = SQL; Query database to get clue latitude
-        //clueLng = SQL; Query database to get clue longitude
     }
 
 
@@ -166,14 +165,6 @@ public class TreasureHunt extends AppCompatActivity implements
         }
 
     }
-
-    /**
-     * Write stage completion info to user quest table with timestamp.
-     */
-    public void stageCompleted() {
-        updateUserInfo();
-    }
-
     public String getCurrentUser() {
         DataManager data = getInstance();
         return data.getCurrentUserName();
@@ -198,17 +189,17 @@ public class TreasureHunt extends AppCompatActivity implements
         }
     }
 
-    public void updateClueFound(View view) {
+    public void clueFound() {
         if (mCurrentStage != mTotalStage) {
             mCurrentStage += 1;
-            loadCurrentStage();
+            loadCurrentStage(); // loads texxt view data
             getLoaderManager().restartLoader(LOADER_CLUE, null, this);
         } else {
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
         }
-        stageCompleted();
+        updateUserInfo();
     }
 
 
@@ -446,8 +437,8 @@ public class TreasureHunt extends AppCompatActivity implements
             mClueCursor.moveToNext();
             mClueId = mClueCursor.getString(clueIdPos);
             mClueText = mClueCursor.getString(clueTextPos);
-            mClueLat = mClueCursor.getDouble(clueLatPos);
-            mClueLong = mClueCursor.getDouble(clueLongPos);
+            mClueLat = mClueCursor.getFloat(clueLatPos);
+            mClueLong = mClueCursor.getFloat(clueLongPos);
         }
 
         displayClue();
@@ -494,38 +485,30 @@ public class TreasureHunt extends AppCompatActivity implements
 
 
     public void checkLocation() {
-//        if(clueLat < 0){
-//            clueLat * -1;
-//        }
-//        if(clueLng < 0){
-//            clueLng * -1;
-//        }
-//        if(userLat < 0){
-//            userLat * -1;
-//        }
-//        if(userLng < 0){
-//            userLng * -1;
-//        }
-//        if (clueLat > userLat && clueLng > userLng) {
-//            float locationABSvalue = (clueLat - userLat) + (clueLng - userLng);
-//        } else if(clueLat < userLat && clueLng < userLng){
-//            float locationABSvalue = ( userLat -clueLat) + (userLng -clueLng);
-//        } else if (clueLat > userLat && clueLng < userLng){
-//            float locationABSvalue = (clueLat - userLat) + (userLng -clueLng);
-//        }else if (clueLat < userLat && clueLng > userLng){
-//            float locationABSvalue = (userLat -clueLat) + (clueLng -userLng);
-//        }
-//        if(locationABSvalue < distanceThreshold){
-//            if (currentStage == totalStages){
-        //***FINISHED**
-        //Display some kinds of well done message (Fragment overlaying screen? when exited return to your stats page?)
-        //SQL update number of quests completed
-//            }
-//            float clueLat = SQL; Query database to get next clue latitude
-//            float clueLng = SQL; Query database to get next clue longitude
-//            clue = SQL; Query database to get next clue
-//            SQL; Update database increment user currentStage by 1
-//        }
+        if(mClueLat < 0){
+            mClueLat *= -1;
+        }
+        if(mClueLong < 0){
+            mClueLong *= -1;
+        }
+        if(userLat < 0){
+            userLat *= -1;
+        }
+        if(userLng < 0){
+            userLng *= -1;
+        }
+        if (mClueLat > userLat && mClueLong > userLng) {
+             locationABSvalue = (mClueLat - userLat) + (mClueLong - userLng);
+        } else if(mClueLat < userLat && mClueLong < userLng){
+            locationABSvalue = ( userLat - mClueLat) + (userLng -mClueLong);
+        } else if (mClueLat > userLat && mClueLong < userLng){
+            locationABSvalue = (mClueLong - userLat) + (userLng -mClueLong);
+        }else if (mClueLat < userLat && mClueLong > userLng){
+            locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
+        }
+        if(locationABSvalue < distanceThreshold){
+            clueFound();
+        }
     }
 
     /**
