@@ -20,7 +20,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
     private void initialiseDisplayContent() {
         DataManager.loadQuests(mDbOpenHelper);
         List<QuestInfo> quests = DataManager.getInstance().getQuests();

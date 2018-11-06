@@ -66,7 +66,7 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mQuestId;
     private int mCurrentStage;
     private int mTotalStage;
-    private String mClueText;
+    private String mClueText = "some test text";
     private String mClueId;
     private double mClueLat;
     private double mClueLong;
@@ -88,9 +88,7 @@ public class TreasureHunt extends AppCompatActivity implements
         mCurrentStage = bundle.getInt("currStage");
         mTotalStage = bundle.getInt("totalStage");
 
-        getLoaderManager().initLoader(LOADER_CLUE, null, this);
-        initialiseViewContent();
-
+        loadViewContent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -101,53 +99,72 @@ public class TreasureHunt extends AppCompatActivity implements
             }
         });
 
-        //Button to read steps data
-        mButtonViewToday = (Button) findViewById(R.id.view_today);
-        //Sets listener for onClick event
-        mButtonViewToday.setOnClickListener(this);
-
-        // Create a Google Fit Client instance.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Fitness.HISTORY_API)
-                .addApi(Fitness.RECORDING_API)
-                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-                .addConnectionCallbacks(this)
-                .enableAutoManage(this, 0, this)
-                .build();
-
-        //Add fitnessOptions for permissions, not using this at the moment using Google Fit Client instance instead however may change in future as this is the recommended approach
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                .build();
-
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    this, // your activity
-                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(this),
-                    fitnessOptions);
-        } else {
-            recordSteps();
-        }
+//        //Button to read steps data
+//        mButtonViewToday = (Button) findViewById(R.id.view_today);
+//        //Sets listener for onClick event
+//        mButtonViewToday.setOnClickListener(this);
+//
+//        // Create a Google Fit Client instance.
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addApi(Fitness.HISTORY_API)
+//                .addApi(Fitness.RECORDING_API)
+//                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+//                .addConnectionCallbacks(this)
+//                .enableAutoManage(this, 0, this)
+//                .build();
+//
+//        //Add fitnessOptions for permissions, not using this at the moment using Google Fit Client instance instead however may change in future as this is the recommended approach
+//        FitnessOptions fitnessOptions = FitnessOptions.builder()
+//                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+//                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+//                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+//                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+//                .build();
+//
+//        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+//            GoogleSignIn.requestPermissions(
+//                    this, // your activity
+//                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
+//                    GoogleSignIn.getLastSignedInAccount(this),
+//                    fitnessOptions);
+//        } else {
+//            recordSteps();
+//        }
 
         //SQL Query to get Quest Name, stage id and clue and set various textViews
     }
 
+    public void updateClueFound(View view) {
+        if (mCurrentStage != mTotalStage) {
+            mCurrentStage += 1;
+            loadCurrentStage();
+            getLoaderManager().restartLoader(LOADER_CLUE, null, this);
+        } else {
+            String victory = "Quest Completed!";
+            mClueText = victory;
+            displayClue();
+        }
+    }
 
-    private void initialiseViewContent() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(LOADER_CLUE, null, this);
+        loadCurrentStage();
+    }
 
-        TextView questValue = findViewById(R.id.quest_value);
-        questValue.setText(mQuestName);
-
+    private void loadCurrentStage() {
         TextView currStageValue = findViewById(R.id.curr_stage_value);
         currStageValue.setText(String.valueOf(mCurrentStage));
+    }
 
+
+    private void loadViewContent() {
+        TextView questValue = findViewById(R.id.quest_value);
+        questValue.setText(mQuestName);
         TextView totalStageValue = findViewById(R.id.total_stage_value);
         totalStageValue.setText(String.valueOf(mTotalStage));
-
+        loadCurrentStage();
     }
 
 
@@ -203,7 +220,7 @@ public class TreasureHunt extends AppCompatActivity implements
                 String questId = mQuestId;
                 String currStage = String.valueOf(mCurrentStage);
                 String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
-                        + CluesInfoEntry.COLUMN_CLUE_STAGE + " == ?";
+                        + CluesInfoEntry.COLUMN_CLUE_STAGE + " = ?";
 
                 String[] selectionArgs = {questId, currStage};
 
@@ -225,11 +242,10 @@ public class TreasureHunt extends AppCompatActivity implements
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if(loader.getId()==LOADER_CLUE)
-            loadFinishedNotes(data);
-
+            loadNewClue(data);
     }
 
-    private void loadFinishedNotes(Cursor data) {
+    private void loadNewClue(Cursor data) {
         mClueCursor = data;
 
         int clueIdPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
