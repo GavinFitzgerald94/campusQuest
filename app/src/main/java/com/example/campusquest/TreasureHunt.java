@@ -136,12 +136,11 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
     public String getCurrentUser() {
-        DataManager data = getInstance(); // Gets current instance of data manager service.
+        DataManager data = getInstance();
         return data.getCurrentUserName();
     }
 
     public void updateClueFound(View view) {
-        stageCompleted();
         if (mCurrentStage != mTotalStage) {
             mCurrentStage += 1;
             loadCurrentStage();
@@ -149,9 +148,9 @@ public class TreasureHunt extends AppCompatActivity implements
         } else {
             String victory = "Quest Completed!";
             mClueText = victory;
-
             displayClue();
         }
+        stageCompleted();
     }
 
     @Override
@@ -363,7 +362,6 @@ public class TreasureHunt extends AppCompatActivity implements
             }
 
             Log.i(TAG, "Total steps: " + total);
-
             return null;
         }
     }
