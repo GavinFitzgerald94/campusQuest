@@ -82,7 +82,7 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mQuestId;
     private int mCurrentStage;
     private int mTotalStage;
-    private String mClueText = "some test text";
+    private String mClueText;
     private String mClueId;
 
     private float distanceThreshold;
@@ -119,39 +119,39 @@ public class TreasureHunt extends AppCompatActivity implements
             }
         });
 
-        mButtonViewToday = (Button) findViewById(R.id.view_today);
-        //Sets listener for onClick event
-        mButtonViewToday.setOnClickListener(this);
-
-        // Create a Google Fit Client instance.
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Fitness.SENSORS_API)
-                .addApi(Fitness.HISTORY_API)
-                .addApi(Fitness.RECORDING_API)
-                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-                .addConnectionCallbacks(this)
-                .enableAutoManage(this, 0, this)
-                .build();
-
-        //Add fitnessOptions for permissions, not using this at the moment using Google Fit Client instance instead however may change in future as this is the recommended approach
-        FitnessOptions fitnessOptions = FitnessOptions.builder()
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE)
-                .build();
-
-        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
-            GoogleSignIn.requestPermissions(
-                    this, // your activity
-                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-                    GoogleSignIn.getLastSignedInAccount(this),
-                    fitnessOptions);
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
-        }
+//        mButtonViewToday = (Button) findViewById(R.id.view_today);
+//        //Sets listener for onClick event
+//        mButtonViewToday.setOnClickListener(this);
+//
+//        // Create a Google Fit Client instance.
+//        mGoogleApiClient = new GoogleApiClient.Builder(this)
+//                .addApi(Fitness.SENSORS_API)
+//                .addApi(Fitness.HISTORY_API)
+//                .addApi(Fitness.RECORDING_API)
+//                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+//                .addConnectionCallbacks(this)
+//                .enableAutoManage(this, 0, this)
+//                .build();
+//
+//        //Add fitnessOptions for permissions, not using this at the moment using Google Fit Client instance instead however may change in future as this is the recommended approach
+//        FitnessOptions fitnessOptions = FitnessOptions.builder()
+//                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
+//                .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+//                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
+//                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE)
+//                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
+//                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE)
+//                .build();
+//
+//        if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
+//            GoogleSignIn.requestPermissions(
+//                    this, // your activity
+//                    GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
+//                    GoogleSignIn.getLastSignedInAccount(this),
+//                    fitnessOptions);
+//        } else {
+//            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
+//        }
 
     }
 
@@ -189,17 +189,17 @@ public class TreasureHunt extends AppCompatActivity implements
         }
     }
 
-    public void clueFound() {
+    public void clueFound(View view) {
         if (mCurrentStage != mTotalStage) {
             mCurrentStage += 1;
-            loadCurrentStage(); // loads texxt view data
+            loadCurrentStage(); // loads text view data
             getLoaderManager().restartLoader(LOADER_CLUE, null, this);
         } else {
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
         }
-        updateUserInfo();
+        new UpdateUserInfo().execute();
     }
 
 
@@ -450,21 +450,30 @@ public class TreasureHunt extends AppCompatActivity implements
         clueValue.setText(mClueText);
     }
 
-    private void updateUserInfo() {
-        ContentValues values = new ContentValues(0);
+    private class UpdateUserInfo extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ContentValues values = new ContentValues(0);
 
-        values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
-        values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
-        values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
-        if (mCurrentStage == mTotalStage) {
-            values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
-        } else {
-            values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+            values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
+            values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
+            values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            if (mCurrentStage == mTotalStage) {
+                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
+            } else {
+                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+            }
+
+            SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+            long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
+
+            return null;
         }
-
-        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
-        long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
     }
+
+
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
@@ -507,7 +516,7 @@ public class TreasureHunt extends AppCompatActivity implements
             locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
         }
         if(locationABSvalue < distanceThreshold){
-            clueFound();
+            //clueFound();
         }
     }
 
