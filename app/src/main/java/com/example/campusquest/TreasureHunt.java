@@ -1,16 +1,26 @@
 package com.example.campusquest;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.LoaderManager;
+import android.content.ContentValues;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -28,38 +38,77 @@ import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.DataPoint;
 import com.google.android.gms.fitness.data.DataSet;
+import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
+import com.google.android.gms.fitness.data.Value;
+import com.google.android.gms.fitness.request.DataSourcesRequest;
+import com.google.android.gms.fitness.request.OnDataPointListener;
+import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DailyTotalResult;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 
 
 import java.text.DateFormat;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.jar.Manifest;
+
+import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
+import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
+import static com.example.campusquest.DataManager.getInstance;
 
 public class TreasureHunt extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        View.OnClickListener{
+        View.OnClickListener,
+        LoaderManager.LoaderCallbacks<Cursor> {
 
+    public static final int ID = 0;
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0x1001;
-    public static final String TAG = "StepCounter";
+    public static String TAG = "";
+    public static final int LOADER_CLUE = 0;
+    public static final int QUEST_COMPLETED = 1;
+    public static final int QUEST_INCOMPLETE = 0;
     private Button mButtonViewToday;
-    private double userLat;
-    private double userLng;
-    private boolean foundClue;
+    private float userLat;
+    private float userLng;
+    private CampusQuestOpenHelper mDbOpenHelper;
+    private String mQuestName;
+    private String mQuestId;
+    private int mCurrentStage;
+    private int mTotalStage;
+    private String mClueText;
+    private String mClueId;
 
-
+    private float distanceThreshold;
+    private OnDataPointListener mListener;
+    private float mClueLat;
+    private float mClueLong;
+    private float locationABSvalue;
     private GoogleApiClient mGoogleApiClient;
+    private Cursor mClueCursor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_treasure_hunt);        //Set display content
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); //Generic toolbar
+        setContentView(R.layout.activity_treasure_hunt);        // Set display content
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // Generic toolbar
         setSupportActionBar(toolbar);
+
+        mDbOpenHelper = new CampusQuestOpenHelper(this);
+
+        Bundle bundle = getIntent().getExtras();
+        mQuestName = bundle.getString("questName");
+        mQuestId = bundle.getString("questId");
+        mCurrentStage = bundle.getInt("currStage");
+        mTotalStage = bundle.getInt("totalStage");
+
+        loadViewContent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -70,13 +119,13 @@ public class TreasureHunt extends AppCompatActivity implements
             }
         });
 
-        //Button to read steps data
         mButtonViewToday = (Button) findViewById(R.id.view_today);
         //Sets listener for onClick event
         mButtonViewToday.setOnClickListener(this);
 
         // Create a Google Fit Client instance.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(Fitness.SENSORS_API)
                 .addApi(Fitness.HISTORY_API)
                 .addApi(Fitness.RECORDING_API)
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
@@ -88,8 +137,10 @@ public class TreasureHunt extends AppCompatActivity implements
         FitnessOptions fitnessOptions = FitnessOptions.builder()
                 .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
                 .addDataType(DataType.TYPE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_READ)
-                .addDataType(DataType.AGGREGATE_STEP_COUNT_DELTA, FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_CALORIES_EXPENDED, FitnessOptions.ACCESS_WRITE)
+                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_READ)
+                .addDataType(DataType.TYPE_DISTANCE_DELTA, FitnessOptions.ACCESS_WRITE)
                 .build();
 
         if (!GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(this), fitnessOptions)) {
@@ -99,10 +150,9 @@ public class TreasureHunt extends AppCompatActivity implements
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
         } else {
-            recordSteps();
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
         }
 
-        //SQL Query to get Quest Name, stage id and clue and set various textViews
     }
 
 
@@ -110,20 +160,99 @@ public class TreasureHunt extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GOOGLE_FIT_PERMISSIONS_REQUEST_CODE) {
-                recordSteps();
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);//Checks if app can use fine location data as of marshmallow this is required at run-time
             }
+        }
+
+    }
+    public String getCurrentUser() {
+        DataManager data = getInstance();
+        return data.getCurrentUserName();
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    recordData();
+                    trackLocation();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+            // other 'case' lines to check for other
+            // permissions this app might request
         }
     }
 
-    /** Creates Recording subscription */
-    private void recordSteps() {
+    public void clueFound() {
+        if (mCurrentStage != mTotalStage) {
+            mCurrentStage += 1;
+            loadCurrentStage(); // loads text view data
+            getLoaderManager().restartLoader(LOADER_CLUE, null, this);
+        } else {
+            String victory = "Quest Completed!";
+            mClueText = victory;
+            displayClue();
+        }
+        new UpdateUserInfo().execute();
+    }
+
+
+    /**
+     * Creates Recording subscription, this data is recorded constantly in the background in a battery efficent manner.
+     * Records data to users google fit account which can be accessed through the history api later
+     */
+    private void recordData() {
+
         // To create a subscription, invoke the Recording API. As soon as the subscription is
         // active, fitness data will start recording.
         Fitness.RecordingApi.subscribe(mGoogleApiClient, DataType.TYPE_STEP_COUNT_DELTA)
                 .setResultCallback(new ResultCallback<Status>() {
                     @Override
                     public void onResult(Status status) {
+                        TAG = "Step Count Delta";
                         if (status.isSuccess()) {
+                            if (status.getStatusCode()
+                                    == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                                Log.i(TAG, "Existing subscription for activity detected.");
+                            } else {
+                                Log.i(TAG, "Successfully subscribed!");
+                            }
+                        } else {
+                            Log.w(TAG, "There was a problem subscribing.");
+                        }
+                    }
+                });
+
+        Fitness.RecordingApi.subscribe(mGoogleApiClient, DataType.TYPE_CALORIES_EXPENDED)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            TAG = "Calories Expended";
+                            if (status.getStatusCode()
+                                    == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
+                                Log.i(TAG, "Existing subscription for activity detected.");
+                            } else {
+                                Log.i(TAG, "Successfully subscribed!");
+                            }
+                        } else {
+                            Log.w(TAG, "There was a problem subscribing.");
+                        }
+                    }
+                });
+
+        Fitness.RecordingApi.subscribe(mGoogleApiClient, DataType.TYPE_DISTANCE_DELTA)
+                .setResultCallback(new ResultCallback<Status>() {
+                    @Override
+                    public void onResult(Status status) {
+                        if (status.isSuccess()) {
+                            TAG = "Distance Delta";
                             if (status.getStatusCode()
                                     == FitnessStatusCodes.SUCCESS_ALREADY_SUBSCRIBED) {
                                 Log.i(TAG, "Existing subscription for activity detected.");
@@ -137,72 +266,281 @@ public class TreasureHunt extends AppCompatActivity implements
                 });
     }
 
-//    private void displayStepDataForToday() {
-//        DailyTotalResult result = Fitness.HistoryApi.readDailyTotal( mGoogleApiClient, DataType.AGGREGATE_STEP_COUNT_DELTA ).await(1, TimeUnit.MINUTES);
-//        showDataSet(result.getTotal());
-//    }
 
-//    private void showDataSet(DataSet dataSet) {
-//        Log.e("History", "Data returned for Data type: " + dataSet.getDataType().getName());
-//        DateFormat dateFormat = DateFormat.getDateInstance();
-//        DateFormat timeFormat = DateFormat.getTimeInstance();
-//
-//        for (DataPoint dp : dataSet.getDataPoints()) {
-//            Log.e("History", "Data point:");
-//            Log.e("History", "\tType: " + dp.getDataType().getName());
-//            Log.e("History", "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-//            Log.e("History", "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)) + " " + timeFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-//            for(Field field : dp.getDataType().getFields()) {
-//                Log.e("History", "\tField: " + field.getName() +
-//                        " Value: " + dp.getValue(field));
-//            }
-//        }
-//    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getLoaderManager().restartLoader(LOADER_CLUE, null, this);
+        loadCurrentStage();
+    }
 
-//    private class ViewTodaysStepCountTask extends AsyncTask<Void, Void, Void> {
-//        protected Void doInBackground(Void... params) {
-//            displayStepDataForToday();
-//            return null;
-//        }
-//    }
+    private void loadCurrentStage() {
+        TextView currStageValue = findViewById(R.id.curr_stage_value);
+        currStageValue.setText(String.valueOf(mCurrentStage));
+    }
 
-    /** Accesses google fit history and displays total steps onscreen. */
-    private class CountStepsToday extends AsyncTask<Void, Void, Void> {
-        protected Void doInBackground(Void... params) {
 
-            long total = 0;
+    private void loadViewContent() {
+        TextView questValue = findViewById(R.id.quest_value);
+        questValue.setText(mQuestName);
+        TextView totalStageValue = findViewById(R.id.total_stage_value);
+        totalStageValue.setText(String.valueOf(mTotalStage));
+        loadCurrentStage();
+    }
 
-            PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mGoogleApiClient, DataType.TYPE_STEP_COUNT_DELTA);
-            DailyTotalResult totalResult = result.await(30, TimeUnit.SECONDS);
-            if (totalResult.getStatus().isSuccess()) {
-                DataSet totalSet = totalResult.getTotal();
-                total = totalSet.isEmpty()
-                        ? 0
-                        : totalSet.getDataPoints().get(0).getValue(Field.FIELD_STEPS).asInt();
 
-                final long finalTotal = total;
-                runOnUiThread(new Runnable() {
+    /**
+     * Adds a listener to track users location
+     * Check if sensor for requested data is available first then registers the listener.
+     */
+    public void trackLocation() {
+
+        //Check if device has location data sensors
+        Fitness.getSensorsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .findDataSources(
+                        new DataSourcesRequest.Builder()
+                                .setDataTypes(DataType.TYPE_LOCATION_SAMPLE)
+                                .setDataSourceTypes(DataSource.TYPE_RAW)
+                                .build())
+                .addOnSuccessListener(
+                        new OnSuccessListener<List<DataSource>>() {
+                            @Override
+                            public void onSuccess(List<DataSource> dataSources) {
+                                for (DataSource dataSource : dataSources) {
+                                    TAG = "Looking for Location";
+                                    Log.i(TAG, "Data source found: " + dataSource.toString());
+                                    Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
+
+                                    // Let's register a listener to receive location data!
+                                    if (dataSource.getDataType().equals(DataType.TYPE_LOCATION_SAMPLE)
+                                            && mListener == null) {
+                                        Log.i(TAG, "Data source for LOCATION_SAMPLE found!  Registering.");
+                                        registerFitnessDataListener(dataSource, DataType.TYPE_LOCATION_SAMPLE);
+                                    }
+                                }
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "failed", e);
+                            }
+                        });
+    }
+
+    /**
+     * Uses google fits sensors client to add a listener
+     */
+    private void registerFitnessDataListener(DataSource dataSource, DataType dataType) {
+
+        mListener =
+                new OnDataPointListener() {
                     @Override
-                    public void run() {
-                        TextView steps = (TextView)findViewById(R.id.steps);
-                        steps.setText(""+ finalTotal);
+                    public void onDataPoint(DataPoint dataPoint) {
+                        Log.e(TAG, "FOUND DATA");
+                        for (Field field : dataPoint.getDataType().getFields()) {
+                            Value val = dataPoint.getValue(field);
+                            String compareLat = "latitude";
+                            String compareLng = "longitude";
+                            String willCheckLocation = "altitude";
+                            if (field.getName().equals(compareLat)) {
+                                setUserLat(val.asFloat());
+                            } else if (field.getName().equals(compareLng)) {
+                                setUserLng(val.asFloat());
+                            } else if (field.getName().equals(willCheckLocation)) {
+                                checkLocation();
+                            }
+                            Log.i(TAG, "Detected DataPoint field: " + field.getName());
+                            Log.i(TAG, "Detected DataPoint value: " + val);
+                        }
                     }
-                });
+                };
 
+        Fitness.getSensorsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .add(
+                        new SensorRequest.Builder()
+                                .setDataSource(dataSource)
+                                .setDataType(dataType)
+                                .setSamplingRate(5, TimeUnit.SECONDS)
+                                .build(),
+                        mListener)
+                .addOnCompleteListener(
+                        new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.i(TAG, "Listener registered!");
+                                } else {
+                                    Log.e(TAG, "Listener not registered.", task.getException());
+                                }
+                            }
+                        });
+    }
+
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = null;
+        if (id == LOADER_CLUE)
+            loader = createLoaderClue();
+
+        return loader;
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    private CursorLoader createLoaderClue() {
+        return new CursorLoader(this) {
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
+
+                String questId = mQuestId;
+                String currStage = String.valueOf(mCurrentStage);
+                String selection = CluesInfoEntry.COLUMN_QUEST_ID + " = ? AND "
+                        + CluesInfoEntry.COLUMN_CLUE_STAGE + " = ?";
+
+                String[] selectionArgs = {questId, currStage};
+
+                String[] clueColumns = {
+                        CluesInfoEntry.COLUMN_QUEST_ID,
+                        CluesInfoEntry.COLUMN_CLUE_ID,
+                        CluesInfoEntry.COLUMN_CLUE_TEXT,
+                        CluesInfoEntry.COLUMN_CLUE_LAT,
+                        CluesInfoEntry.COLUMN_CLUE_LONG,
+                        CluesInfoEntry.COLUMN_CLUE_STAGE};
+
+                return db.query(CluesInfoEntry.TABLE_NAME, clueColumns,
+                        selection, selectionArgs, null, null, null);
+
+            }
+        };
+    }
+
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (loader.getId() == LOADER_CLUE)
+            loadNewClue(data);
+    }
+
+    private void loadNewClue(Cursor data) {
+        mClueCursor = data;
+
+        int clueIdPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_ID);
+        int clueTextPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_TEXT);
+        int clueLatPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LAT);
+        int clueLongPos = mClueCursor.getColumnIndex(CluesInfoEntry.COLUMN_CLUE_LONG);
+
+        if (mClueCursor.getCount() > 0) {
+            mClueCursor.moveToNext();
+            mClueId = mClueCursor.getString(clueIdPos);
+            mClueText = mClueCursor.getString(clueTextPos);
+            mClueLat = mClueCursor.getFloat(clueLatPos);
+            mClueLong = mClueCursor.getFloat(clueLongPos);
+        }
+
+        displayClue();
+
+    }
+
+    private void displayClue() {
+        TextView clueValue = findViewById(R.id.clue_value);
+        clueValue.setText(mClueText);
+    }
+
+    private class UpdateUserInfo extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ContentValues values = new ContentValues(0);
+
+            values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
+            values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
+            values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            if (mCurrentStage == mTotalStage) {
+                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
             } else {
-                Log.w(TAG, "There was a problem getting the step count.");
+                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
             }
 
-            Log.i(TAG, "Total steps: " + total);
+            SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+            long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
 
             return null;
         }
     }
 
-    /** Initialises and executes CountStepsToday on click */
+
+
+
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if (loader.getId() == LOADER_CLUE) {
+            if (mClueCursor != null)
+                mClueCursor.close();
+        }
+
+    }
+
+    public void setUserLat(float latitude) {
+        this.userLat = latitude;
+    }
+
+    public void setUserLng(float longitude) {
+        this.userLng = longitude;
+    }
+
+
+    public void checkLocation() {
+        if(mClueLat < 0){
+            mClueLat *= -1;
+        }
+        if(mClueLong < 0){
+            mClueLong *= -1;
+        }
+        if(userLat < 0){
+            userLat *= -1;
+        }
+        if(userLng < 0){
+            userLng *= -1;
+        }
+        if (mClueLat > userLat && mClueLong > userLng) {
+             locationABSvalue = (mClueLat - userLat) + (mClueLong - userLng);
+        } else if(mClueLat < userLat && mClueLong < userLng){
+            locationABSvalue = ( userLat - mClueLat) + (userLng -mClueLong);
+        } else if (mClueLat > userLat && mClueLong < userLng){
+            locationABSvalue = (mClueLong - userLat) + (userLng -mClueLong);
+        }else if (mClueLat < userLat && mClueLong > userLng){
+            locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
+        }
+        if(locationABSvalue < distanceThreshold){
+            clueFound();
+        }
+    }
+
+    /**
+     * Initialises and executes CountStepsToday on click
+     */
     @Override
     public void onClick(View v) {
-        new CountStepsToday().execute();
+    }
+
+    /**
+     * Called when the user taps the stats button
+     */
+    public void statsView(View view) {
+        Intent intent = new Intent(this, stats.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Display user location for debugging
+     */
+    public void uLocation(View view) {
+        TextView latLng = (TextView) findViewById(R.id.userLocation);
+        latLng.setText("Latitude: " + userLat + " Longitude: " + userLng);
     }
 
     @Override
@@ -219,12 +557,9 @@ public class TreasureHunt extends AppCompatActivity implements
         Log.i("HistoryAPI", "onConnected");
     }
 
-
-    //Maybe run on time interval as thread?
-    public void atDestination(double lat, double lng) {
-
-        foundClue = false;
-
+    protected void onDestroy() {
+        super.onDestroy();
+        mDbOpenHelper.close();
     }
 
 }
