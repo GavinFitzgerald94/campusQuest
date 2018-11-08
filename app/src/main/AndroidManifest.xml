@@ -20,7 +20,8 @@
         <activity
             android:name=".TreasureHunt"
             android:label="@string/title_activity_treasure_hunt"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>
