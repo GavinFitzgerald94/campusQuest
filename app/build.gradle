@@ -26,7 +26,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    compile 'com.google.android.gms:play-services-fitness:11.6.0'
-    compile 'com.google.android.gms:play-services-auth:11.6.0'
+    compile 'com.google.android.gms:play-services-fitness:16.0.1'
+    compile 'com.google.android.gms:play-services-auth:16.0.1'
+    compile 'com.google.android.gms:play-services-maps:16.0.0'
     implementation 'com.android.support:design:27.1.1'
 }
