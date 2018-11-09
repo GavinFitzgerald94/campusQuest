@@ -17,7 +17,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mDbOpenHelper = new CampusQuestOpenHelper(this);
         initialiseDisplayContent();
-
     }
 
     private void initialiseDisplayContent() {

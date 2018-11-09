@@ -1,47 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_new_gamebutton"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginBottom="8dp"
-        android:onClick="newGame"
-        android:text="@string/new_game"
-        app:layout_constraintBottom_toTopOf="@+id/button_resume_gamebutton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button_resume_gamebutton"
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="184dp"
-        android:onClick="resumeGame"
-        android:text="@string/resume_game"
-        app:layout_constraintBottom_toTopOf="@+id/button_statistics"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:layout_height="250dp"
+        android:src="@drawable/treasure"
+        android:orientation="vertical"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="40dp"/>
 
-    <Button
-        android:id="@+id/button_statistics"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="48dp"
-        android:text="@string/statistics"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center">
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/button_new_gamebutton"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:onClick="newGame"
+                android:text="@string/new_game" />
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/button_resume_gamebutton"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:onClick="resumeGame"
+                android:text="@string/resume_game" />
+            <Button
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:id="@+id/button_statistics"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:text="@string/statistics" />
+        </LinearLayout>
+</LinearLayout>

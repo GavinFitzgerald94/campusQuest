@@ -1,77 +1,188 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".stats">
+    tools:context=".stats"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="84dp"
-        android:layout_height="74dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars[3]" />
+    <!--<ImageView-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:layout_width="84dp"-->
+        <!--android:layout_height="74dp"-->
+        <!--android:layout_marginStart="8dp"-->
+        <!--android:layout_marginTop="45dp"-->
+        <!--android:layout_marginEnd="8dp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent"-->
+        <!--tools:srcCompat="@tools:sample/avatars[3]" />-->
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="368dp"-->
+        <!--android:layout_height="219dp"-->
+        <!--android:layout_marginTop="24dp"-->
+        <!--android:orientation="vertical"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/imageView"-->
+        <!--tools:layout_editor_absoluteX="8dp">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/stepsToday"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Steps Taken Today"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="24sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/numberOfSteps"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="0"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="18sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/CaloriesBurnedToday"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Calories Burned Today"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="24sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/numberOfCaloriesBurned"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="0"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="18sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/DistanceTraveledToday"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Distance Traveled Today"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="24sp" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/distanceTraveledNumber"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="0"-->
+            <!--android:textAlignment="center"-->
+            <!--android:textSize="18sp" />-->
+    <!--</LinearLayout>-->
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/run_icon"
+            android:layout_width="230dp"
+            android:layout_height="230dp"
+            android:layout_marginLeft="-50dp"
+            android:alpha="0.3"
+            android:layout_gravity="center"
+            android:src="@drawable/run_icon"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="Your stats"
+            android:textSize="30sp"
+            android:layout_toRightOf="@+id/run_icon"/>
+    </RelativeLayout>
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="219dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        tools:layout_editor_absoluteX="8dp">
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center">
 
-        <TextView
-            android:id="@+id/stepsToday"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Steps Taken Today"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_marginBottom="20dp">
 
-        <TextView
-            android:id="@+id/numberOfSteps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            <ImageView
+                android:id="@+id/steps_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/steps_icon" />
+            <TextView
+                android:id="@+id/stepsToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/steps_icon"
+                android:text="  Steps"
+                android:textSize="24sp" />
+            <TextView
+                android:id="@+id/numberOfSteps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/stepsToday"
+                android:text=" 0"
+                android:textSize="24sp" />
 
-        <TextView
-            android:id="@+id/CaloriesBurnedToday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Calories Burned Today"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/numberOfCaloriesBurned"
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            android:layout_marginBottom="20dp">
 
-        <TextView
-            android:id="@+id/DistanceTraveledToday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Distance Traveled Today"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            <ImageView
+                android:id="@+id/calories_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/calories_icon" />
 
-        <TextView
-            android:id="@+id/distanceTraveledNumber"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/CaloriesBurnedToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/calories_icon"
+                android:text="  Calories"
+                android:textSize="24sp" />
+            <TextView
+                android:id="@+id/numberOfCaloriesBurned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" 0"
+                android:layout_toRightOf="@id/CaloriesBurnedToday"
+                android:textSize="24sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0"
-            android:textAlignment="center"
-            android:textSize="18sp" />
+            android:layout_marginBottom="20dp">
+
+            <ImageView
+                android:id="@+id/distance_icon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/distance_icon" />
+
+            <TextView
+                android:id="@+id/DistanceTraveledToday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/distance_icon"
+                android:text="  Distance"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/distanceTraveledNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=" 0"
+                android:layout_toRightOf="@+id/DistanceTraveledToday"
+                android:textSize="24sp" />
+        </RelativeLayout>
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>
