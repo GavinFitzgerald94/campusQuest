@@ -10,8 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.*;
 
@@ -61,6 +64,8 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
      * Passes a bundle consisting of current stage, total stages, questName, questId
      **/
     public void newGame(View view) {
+        this.mCurrStage = 1;
+        this.mPrevStage = 1;
         Intent intent = new Intent(this, TreasureHunt.class);
         Bundle bundle = new Bundle();
         bundle.putInt("currStage", mCurrStage);
@@ -70,6 +75,36 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         intent.putExtras(bundle);
         startActivity(intent);
     }
+
+
+    public void resumeGamePopUp(View v) {
+        String LOG = "Degbug";
+        Log.e(LOG, "mCurrStage "+mPrevStage);
+        if(mPrevStage == 1 || mPrevStage == 5){
+            newGame(findViewById(R.id.button_resume_gamebutton));
+        } else {
+            //Sweet Alert Dialog
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Are you sure?")
+                    .setContentText("You won't be able to recover your previous game!")
+                    .setConfirmText("Yes, start new game!")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            newGame(findViewById(R.id.button_resume_gamebutton));
+                        }
+                    })
+                    .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                        }
+                    })
+                    .show();
+        }
+    }
+
 
     /**
      * Resume existing game

@@ -13,4 +13,5 @@
     <string name="resume_game">Resume Game</string>
     <string name="statistics">Statistics</string>
     <string name="title_activity_treasure_hunt_no_fit_test">TreasureHuntNoFitTest</string>
+    <string name="clue">Clue</string>
 </resources>
