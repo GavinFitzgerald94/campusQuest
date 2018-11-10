@@ -1,5 +1,6 @@
 package com.example.campusquest;
 
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -52,7 +53,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
         return v;
     }
-
+    
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
