@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">campusQuest</string>
+    <string name="app_name">Campus Quest</string>
     <string name="clickSteps">Count Steps</string>
     <string name="userLocation">null</string>
     <string name="yourLocation">Your Location</string>
@@ -13,4 +13,7 @@
     <string name="resume_game">Resume Game</string>
     <string name="statistics">Statistics</string>
     <string name="title_activity_treasure_hunt_no_fit_test">TreasureHuntNoFitTest</string>
+    <string name="nav_header_title">CampusQuest</string>
+    <string name="nav_header_subtitle">menu options subtitle</string>
+    <string name="nav_header_desc">Navigation header</string>
 </resources>
