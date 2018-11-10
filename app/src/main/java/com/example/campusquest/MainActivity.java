@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     public void navigateTreasureHuntHome(View view) {
         // Create mock quest object, this should be pulled from DB when treasure hunt is selected from quest list.
         // Implemented with navigation drawer?
-        QuestInfo questInfo = new QuestInfo("QU01", "TestObjectName", 5);
+        QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
         Intent intent = new Intent(this, TreasureHuntHome.class);
         intent.putExtra("questInfo", questInfo);
         startActivity(intent);
