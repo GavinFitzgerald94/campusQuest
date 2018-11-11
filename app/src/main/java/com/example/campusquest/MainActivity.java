@@ -23,10 +23,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener,
-        AdapterView.OnItemSelectedListener{
+        AdapterView.OnItemSelectedListener {
     private CampusQuestOpenHelper mDbOpenHelper;
     private DrawerLayout drawer;
     private Spinner mSpinnerQuests;
+    private QuestInfo mSelectedQuest;
+    private List<QuestInfo> mQuests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements
         mSpinnerQuests = findViewById(R.id.spinner_quest);
         DataManager.loadQuests(mDbOpenHelper);
         buildSpinner();
+        mSpinnerQuests.setOnItemSelectedListener(this);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout_main);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -57,11 +60,10 @@ public class MainActivity extends AppCompatActivity implements
      * Build and populate quest selection spinner.
      */
     private void buildSpinner() {
-        List<QuestInfo> quests = DataManager.getInstance().getQuests();
-        ArrayAdapter adapterQuests = new ArrayAdapter(this, android.R.layout.simple_spinner_item, quests);
+        mQuests = DataManager.getInstance().getQuests();
+        ArrayAdapter adapterQuests = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mQuests);
         adapterQuests.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinnerQuests.setAdapter(adapterQuests);
-        mSpinnerQuests.setOnItemSelectedListener(this);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements
      * Check which side bar navigation item is selected and initiate action.
      */
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.nav_home:
                 //code to go to main activity goes here.
                 Toast.makeText(this, "Home page clicked", Toast.LENGTH_SHORT).show();
@@ -101,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements
      * Override back button pressed to close side navigation drawer first before exiting activity.
      */
     public void onBackPressed() {
-        if(drawer.isDrawerOpen(GravityCompat.START)) {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -109,48 +111,55 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void initialiseDisplayContent() {
-         // TODO load values for character sheet here.
+        // TODO load values for character sheet here.
 
     }
 
     @Override
     protected void onDestroy() {
+        mQuests.clear();
         mDbOpenHelper.close();
         super.onDestroy();
     }
 
-    /** Called when the user taps the Send button */
-    public void countSteps(View view) {
-        Intent intent = new Intent(this, TreasureHunt.class);
-        startActivity(intent);
-    }
-
-    /** Navigater use to the treasure hunt game page **/
-    public void navigateTreasureHuntHome() {
-        // Create mock quest object, this should be pulled from DB when treasure hunt is selected from quest list.
-        // Implemented with navigation drawer?
-        QuestInfo questInfo = new QuestInfo("QU01", "TestObjectName", 5);
-        Intent intent = new Intent(this, TreasureHuntHome.class);
-        intent.putExtra("questInfo", questInfo);
-        startActivity(intent);
-    }
-
+//    /** Called when the user taps the Send button */
+//    public void countSteps(View view) {
+//        Intent intent = new Intent(this, TreasureHunt.class);
+//        startActivity(intent);
+//    }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        QuestInfo selectedQuest = (QuestInfo) parent.getItemAtPosition(position);
+        mSelectedQuest = (QuestInfo) parent.getItemAtPosition(position);
 
-        switch (selectedQuest.getQuestId()) {
-            case "QU01":
-                navigateTreasureHuntHome();
-                break;
-            case "QU02":
-                Toast.makeText(this, "This quest has not been implemented yet.", Toast.LENGTH_LONG).show();
-        }
+
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Do nothing - auto-generated stub.
+    }
+
+    /**
+     * Navigates to the treasure hunt home page.
+     *
+     * @param quest a QuestInfo object containing all quest details.
+     **/
+    private void navigateTreasureHuntHome(QuestInfo quest) {
+        Intent intent = new Intent(this, TreasureHuntHome.class);
+        intent.putExtra("questInfo", quest);
+        startActivity(intent);
+    }
+
+    public void goToQuest(View view) {
+
+        switch (mSelectedQuest.getQuestId()) {
+            case "QU01":
+                navigateTreasureHuntHome(mSelectedQuest);
+                break;
+            case "QU02":
+                Toast.makeText(this, "This quest has not been implemented yet.", Toast.LENGTH_LONG).show();
+        }
+
     }
 }
