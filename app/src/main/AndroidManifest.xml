@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.campusquest">
     //Make so these permissions are required to run app
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -14,6 +15,8 @@
         android:theme="@style/AppTheme"
         tools:replace="android:icon,android:theme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_api_key" />
@@ -23,26 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"/>
         <activity android:name=".SignUp"/>
         <activity android:name=".DisplaySteps" />
         <activity
             android:name=".TreasureHunt"
             android:label="@string/title_activity_treasure_hunt"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".stats">
-
-        </activity>
+        <activity android:name=".stats"></activity>
         <activity
             android:name=".TreasureHuntHome"
             android:label="@string/title_activity_treasure_hunt_home"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity
-            android:name=".TreasureHuntNoFitTest"
-            android:label="@string/title_activity_treasure_hunt_no_fit_test"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
     </application>
-
 </manifest>

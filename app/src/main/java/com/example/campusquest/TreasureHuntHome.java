@@ -74,8 +74,8 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         startActivity(intent);
     }
 
-
-   // public void resumeGamePopUp(View v) {
+//
+//    public void resumeGamePopUp(View v) {
 //        String LOG = "Degbug";
 //        Log.e(LOG, "mCurrStage "+mPrevStage);
 //        if(mPrevStage == 1 || mPrevStage == 5){

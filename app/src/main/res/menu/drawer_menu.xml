@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home"
+            android:title="Quest Hub" />
+        <item
+            android:id="@+id/nav_leader_board"
+            android:icon="@drawable/ic_leader_board"
+            android:title="Leaderboard" />
+        <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/ic_friends"
+            android:title="Companions" />
+        <item
+            android:id="@+id/nav_stats"
+            android:icon="@drawable/ic_stats"
+            android:title="Character Sheet" />
+        <item
+            android:id="@+id/nav_sign_out"
+            android:icon="@drawable/ic_sign_out"
+            android:title="Leave CampusQuest" />
+    </group>
+</menu>

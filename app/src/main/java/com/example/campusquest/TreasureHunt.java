@@ -684,7 +684,7 @@ public class TreasureHunt extends AppCompatActivity implements
         }
         Log.e(LOG, "locationABSvalue: "+locationABSvalue+" distanceThreshold: "+distanceThreshold);
         if(locationABSvalue < distanceThreshold){
-            clueFound(); //Implement SWEET ALERT DIALOG for stylish display
+            clueFound(); //TODO: Implement SWEET ALERT DIALOG for stylish display
         }
     }
 
