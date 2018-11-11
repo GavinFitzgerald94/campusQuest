@@ -20,11 +20,11 @@ public class DatabaseDataWorker {
     }
 
     public void insertClues() {
-        insertClue("CL01", "QU01", "There's a lady who's sure...(O Reilly)", 53.308400, -6.221913, 1);
-        insertClue("CL02", "QU01", "All that glitters is gold...(registry) ", 53.306741, -6.221380, 2);
-        insertClue("CL03", "QU01", "And she's buying a stairway to heaven.(language centre)", 53.306220, -6.220468, 3);
-        insertClue("CL04", "QU01", "When she get's there she knows...(little path James J", 53.305928, -6.224306, 4);
-        insertClue("CL05", "QU01", "If the stores are all closed...(Sci West)", 53.308320, -6.225765, 5);
+        insertClue("CL01", "QU01", "There's a lady who's sure...(O Reilly)", 53.308400f, -6.221913f, 1);
+        insertClue("CL02", "QU01", "All that glitters is gold...(registry) ", 53.306741f, -6.221380f, 2);
+        insertClue("CL03", "QU01", "And she's buying a stairway to heaven.(language centre)", 53.306220f, -6.220468f, 3);
+        insertClue("CL04", "QU01", "When she get's there she knows...(little path James J", 53.305928f, -6.224306f, 4);
+        insertClue("CL05", "QU01", "If the stores are all closed...(Sci West)", 53.308320f, -6.225765f, 5);
     }
 
 //    public void insertUserQuestInfo() {

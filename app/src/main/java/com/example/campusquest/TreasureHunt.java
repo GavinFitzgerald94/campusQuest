@@ -7,9 +7,10 @@ import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.database.Cursor;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,16 +21,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
@@ -37,7 +37,6 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
@@ -45,18 +44,24 @@ import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
-import com.google.android.gms.fitness.result.DailyTotalResult;
-
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-
-import java.text.DateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.Manifest;
+
+//import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
@@ -66,6 +71,9 @@ public class TreasureHunt extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener,
+        OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        GoogleMap.OnMyLocationClickListener,
         LoaderManager.LoaderCallbacks<Cursor> {
 
     public static final int ID = 0;
@@ -75,8 +83,8 @@ public class TreasureHunt extends AppCompatActivity implements
     public static final int QUEST_COMPLETED = 1;
     public static final int QUEST_INCOMPLETE = 0;
     private Button mButtonViewToday;
-    private float userLat;
-    private float userLng;
+    private float userLat = 53.308498f;
+    private float userLng = -6.223649f;
     private CampusQuestOpenHelper mDbOpenHelper;
     private String mQuestName;
     private String mQuestId;
@@ -85,13 +93,21 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mClueText;
     private String mClueId;
 
-    private float distanceThreshold;
+    private static final float distanceThreshold = 0.01f;
     private OnDataPointListener mListener;
     private float mClueLat;
     private float mClueLong;
     private float locationABSvalue;
     private GoogleApiClient mGoogleApiClient;
     private Cursor mClueCursor;
+    SupportMapFragment mapFragment;
+    private GoogleMap mMap;
+    Marker now;
+
+    //Clue locations for faking being at clue
+    private float[] mClueLocationsLat = new float[]{53.308400f, 53.306741f, 53.306220f, 53.305928f, 53.308320f};
+    private float[] mClueLocationsLng = new float[]{-6.221913f, -6.221380f, -6.220468f, -6.224306f, -6.225765f};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +115,9 @@ public class TreasureHunt extends AppCompatActivity implements
         setContentView(R.layout.activity_treasure_hunt);        // Set display content
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar); // Generic toolbar
         setSupportActionBar(toolbar);
+
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
         mDbOpenHelper = new CampusQuestOpenHelper(this);
 
@@ -119,9 +138,9 @@ public class TreasureHunt extends AppCompatActivity implements
             }
         });
 
-        mButtonViewToday = (Button) findViewById(R.id.view_today);
-        //Sets listener for onClick event
-        mButtonViewToday.setOnClickListener(this);
+//        mButtonViewToday = (Button) findViewById(R.id.view_today);
+//        //Sets listener for onClick event
+//        mButtonViewToday.setOnClickListener(this);
 
         // Create a Google Fit Client instance.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -153,6 +172,71 @@ public class TreasureHunt extends AppCompatActivity implements
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
         }
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // For showing a move to my location button
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            String LOG = "Permissions Error";
+            Log.e(TAG,"Do not have user permission for Fine or Coarse location");
+            return;
+        }
+
+        //Below settings are not working yet
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
+
+        float userLat = getUserLat();
+        float userLng = getUserLng();
+
+        LatLng user = new LatLng(userLat, userLng);
+        now = mMap.addMarker(new MarkerOptions().position(user).title("Your Location"));
+
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(user).zoom(16).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    public void onLocationChanged() {
+
+        if(now != null){
+            now.remove();
+        }
+
+        float userLat = getUserLat();
+        float userLng = getUserLng();
+
+        LatLng user = new LatLng(userLat, userLng);
+        now = mMap.addMarker(new MarkerOptions().position(user).title("Your Location"));
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(user).zoom(16).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
+
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
     }
 
 
@@ -198,6 +282,20 @@ public class TreasureHunt extends AppCompatActivity implements
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
+//            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+//                    .setTitleText("Good job!")
+//                    .setContentText("You completed the Quest!")
+//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sDialog) {
+//                            sDialog.dismissWithAnimation();
+//                            Intent intent = new Intent(TreasureHunt.this, TreasureHuntHome.class);
+//                            QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
+//                            intent.putExtra("questInfo", questInfo);
+//                            startActivity(intent);
+//                        }
+//                    })
+//                    .show();
         }
         new UpdateUserInfo().execute();
     }
@@ -275,16 +373,16 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
     private void loadCurrentStage() {
-        TextView currStageValue = findViewById(R.id.curr_stage_value);
-        currStageValue.setText(String.valueOf(mCurrentStage));
+        TextView currStageValue = findViewById(R.id.currentStage);
+        currStageValue.setText(String.valueOf("Current Stage: "+mCurrentStage));
     }
 
 
     private void loadViewContent() {
-        TextView questValue = findViewById(R.id.quest_value);
+        TextView questValue = findViewById(R.id.questName);
         questValue.setText(mQuestName);
-        TextView totalStageValue = findViewById(R.id.total_stage_value);
-        totalStageValue.setText(String.valueOf(mTotalStage));
+        TextView totalStageValue = findViewById(R.id.totalStageValue);
+        totalStageValue.setText(String.valueOf("Number of Stages: "+mTotalStage));
         loadCurrentStage();
     }
 
@@ -327,6 +425,40 @@ public class TreasureHunt extends AppCompatActivity implements
                                 Log.e(TAG, "failed", e);
                             }
                         });
+
+        //Check for distance Raw Data
+        Fitness.getSensorsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+                .findDataSources(
+                        new DataSourcesRequest.Builder()
+                                .setDataTypes(DataType.TYPE_DISTANCE_DELTA)
+                                .setDataSourceTypes(DataSource.TYPE_RAW)
+                                .build())
+                .addOnSuccessListener(
+                        new OnSuccessListener<List<DataSource>>() {
+                            @Override
+                            public void onSuccess(List<DataSource> dataSources) {
+                                for (DataSource dataSource : dataSources) {
+                                    TAG = "Looking for Location";
+                                    Log.i(TAG, "Data source found: " + dataSource.toString());
+                                    Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
+
+                                    // Let's register a listener to receive location data!
+                                    if (dataSource.getDataType().equals(DataType.TYPE_DISTANCE_DELTA)
+                                            && mListener == null) {
+                                        Log.i(TAG, "Data source for TYPE_DISTANCE_DELTA found!  Registering.");
+                                        //CHANGE
+                                        registerFitnessDataListener(dataSource, DataType.TYPE_DISTANCE_DELTA);
+                                    }
+                                }
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e(TAG, "failed", e);
+                            }
+                        });
     }
 
     /**
@@ -349,6 +481,7 @@ public class TreasureHunt extends AppCompatActivity implements
                             } else if (field.getName().equals(compareLng)) {
                                 setUserLng(val.asFloat());
                             } else if (field.getName().equals(willCheckLocation)) {
+                                onLocationChanged();
                                 checkLocation();
                             }
                             Log.i(TAG, "Detected DataPoint field: " + field.getName());
@@ -446,7 +579,7 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
     private void displayClue() {
-        TextView clueValue = findViewById(R.id.clue_value);
+        TextView clueValue = findViewById(R.id.clue);
         clueValue.setText(mClueText);
     }
 
@@ -492,8 +625,40 @@ public class TreasureHunt extends AppCompatActivity implements
         this.userLng = longitude;
     }
 
+    public float getUserLat() {
+        return userLat;
+    }
+
+    public float getUserLng() {
+        return userLng;
+    }
+
+    /**
+     * Function to fake the correct coordinates of user for testing to debug
+     * */
+    public void fakeFindClueLocation(View view) {
+        String LOG = "Debug";
+        Log.e(LOG, "mCurrentStage: "+mCurrentStage);
+        switch (mCurrentStage) {
+            case 1:  Log.e(LOG, "mClueLocationsLat, mClueLocationsLng: "+mClueLocationsLat[0]+", "+mClueLocationsLng[0]);setUserLat(mClueLocationsLat[0]);setUserLng(mClueLocationsLng[0]);
+                break;
+            case 2:  setUserLat(mClueLocationsLat[1]);setUserLng(mClueLocationsLng[1]);
+                break;
+            case 3:  setUserLat(mClueLocationsLat[2]);setUserLng(mClueLocationsLng[2]);
+                break;
+            case 4:  setUserLat(mClueLocationsLat[3]);setUserLng(mClueLocationsLng[3]);
+                break;
+            case 5:  setUserLat(mClueLocationsLat[4]);setUserLng(mClueLocationsLng[4]);
+                break;
+        }
+        onLocationChanged();
+        checkLocation();
+    }
 
     public void checkLocation() {
+        String LOG = "Debug Location Check";
+        Log.e(LOG, "mClueLat: "+mClueLat+" mClueLng: "+mClueLong);
+        Log.e(LOG, "userLat: "+userLat+" userLng: "+userLng);
         if(mClueLat < 0){
             mClueLat *= -1;
         }
@@ -514,9 +679,12 @@ public class TreasureHunt extends AppCompatActivity implements
             locationABSvalue = (mClueLong - userLat) + (userLng -mClueLong);
         }else if (mClueLat < userLat && mClueLong > userLng){
             locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
+        }else if (mClueLat == userLat && mClueLong == userLng){
+            locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
         }
+        Log.e(LOG, "locationABSvalue: "+locationABSvalue+" distanceThreshold: "+distanceThreshold);
         if(locationABSvalue < distanceThreshold){
-            clueFound();
+            clueFound(); //TODO: Implement SWEET ALERT DIALOG for stylish display
         }
     }
 
@@ -535,13 +703,13 @@ public class TreasureHunt extends AppCompatActivity implements
         startActivity(intent);
     }
 
-    /**
-     * Display user location for debugging
-     */
-    public void uLocation(View view) {
-        TextView latLng = (TextView) findViewById(R.id.userLocation);
-        latLng.setText("Latitude: " + userLat + " Longitude: " + userLng);
-    }
+//    /**
+//     * Display user location for debugging
+//     */
+//    public void uLocation(View view) {
+//        TextView latLng = (TextView) findViewById(R.id.userLocation);
+//        latLng.setText("Latitude: " + userLat + " Longitude: " + userLng);
+//    }
 
     @Override
     public void onConnectionSuspended(int i) {

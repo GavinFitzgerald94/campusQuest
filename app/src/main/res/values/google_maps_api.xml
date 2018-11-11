@@ -1,24 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--
-    TODO: Before you run your application, you need a Google Maps API key.
-
-    To get one, follow this link, follow the directions and press "Create" at the end:
-
-    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=6B:8F:39:F1:AC:68:21:FF:D6:7D:E8:A4:C6:1D:36:07:71:5F:3B:DB%3Bxyz.ematrix.myapplication
-
-    You can also add your credentials to an existing key, using these values:
-
-    Package name:
-    6B:8F:39:F1:AC:68:21:FF:D6:7D:E8:A4:C6:1D:36:07:71:5F:3B:DB
-
-    SHA-1 certificate fingerprint:
-    6B:8F:39:F1:AC:68:21:FF:D6:7D:E8:A4:C6:1D:36:07:71:5F:3B:DB
-
-    Alternatively, follow the directions here:
-    https://developers.google.com/maps/documentation/android/start#get-key
-
-    Once you have your key (it starts with "AIza"), replace the "google_maps_key"
-    string in this file.
-    -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDjRsP2Z4JM86ag3hkbRMmfS1a72YBlD8w</string>
+    <string name="google_maps_api_key" templateMergeStrategy="preserve" translatable="false">AIzaSyAF6cUPHRI7CaV2deAV2QftaehOdnU4hA4</string>
 </resources>

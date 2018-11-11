@@ -27,97 +27,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/spinner_quest" />
 
-    <TextView
-        android:id="@+id/strength_label"
-        android:layout_width="58dp"
-        android:layout_height="17dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="24dp"
-        android:text="Strength"
-        app:layout_constraintBottom_toTopOf="@+id/choose_quest_label"
-        app:layout_constraintEnd_toStartOf="@+id/strength_value"
-        app:layout_constraintHorizontal_bias="0.602"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endurance_label"
-        app:layout_constraintVertical_bias="0.17" />
-
-    <TextView
-        android:id="@+id/endurance_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:duplicateParentState="true"
-        android:text="Endurance"
-        app:layout_constraintEnd_toStartOf="@+id/endurance_value"
-        app:layout_constraintHorizontal_bias="0.579"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/level_label" />
-
-    <TextView
-        android:id="@+id/level_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="112dp"
-        android:text="Level"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="213dp" />
-
-    <ImageView
-        android:id="@+id/user_image"
-        android:layout_width="159dp"
-        android:layout_height="141dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toTopOf="@+id/level_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.496"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
-
-    <TextView
-        android:id="@+id/user_name"
-        android:layout_width="95dp"
-        android:layout_height="15dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginBottom="60dp"
-        android:text="AVATAR NAME"
-        app:layout_constraintBottom_toTopOf="@+id/user_image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.641"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/level_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="30"
-        tools:layout_editor_absoluteX="229dp"
-        tools:layout_editor_absoluteY="194dp" />
-
-    <TextView
-        android:id="@+id/endurance_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="184dp"
-        android:text="11"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/level_label" />
-
-    <TextView
-        android:id="@+id/strength_value"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="152dp"
-        android:text="12"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/endurance_label" />
-
     <Button
         android:id="@+id/button"
         style="@style/Widget.AppCompat.Button.Borderless"
@@ -126,12 +35,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="84dp"
+        android:gravity="left|center_vertical"
         android:onClick="goToQuest"
-        android:text="Go to Quest"
+        android:text="Begin Quest"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        android:gravity="left|center_vertical"/>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
