@@ -7,16 +7,14 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
+import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
 
-import static com.example.campusquest.CampusQuestDatabaseContract.*;
+//import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class TreasureHuntHome extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>  {
     public static final int LOADER_PREV_GAME = 0;
@@ -77,33 +75,33 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     }
 
 
-    public void resumeGamePopUp(View v) {
-        String LOG = "Degbug";
-        Log.e(LOG, "mCurrStage "+mPrevStage);
-        if(mPrevStage == 1 || mPrevStage == 5){
-            newGame(findViewById(R.id.button_resume_gamebutton));
-        } else {
-            //Sweet Alert Dialog
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Are you sure?")
-                    .setContentText("You won't be able to recover your previous game!")
-                    .setConfirmText("Yes, start new game!")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.dismissWithAnimation();
-                            newGame(findViewById(R.id.button_resume_gamebutton));
-                        }
-                    })
-                    .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.dismissWithAnimation();
-                        }
-                    })
-                    .show();
-        }
-    }
+   // public void resumeGamePopUp(View v) {
+//        String LOG = "Degbug";
+//        Log.e(LOG, "mCurrStage "+mPrevStage);
+//        if(mPrevStage == 1 || mPrevStage == 5){
+//            newGame(findViewById(R.id.button_resume_gamebutton));
+//        } else {
+//            //Sweet Alert Dialog
+//            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+//                    .setTitleText("Are you sure?")
+//                    .setContentText("You won't be able to recover your previous game!")
+//                    .setConfirmText("Yes, start new game!")
+//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sDialog) {
+//                            sDialog.dismissWithAnimation();
+//                            newGame(findViewById(R.id.button_resume_gamebutton));
+//                        }
+//                    })
+//                    .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sDialog) {
+//                            sDialog.dismissWithAnimation();
+//                        }
+//                    })
+//                    .show();
+//        }
+//    }
 
 
     /**

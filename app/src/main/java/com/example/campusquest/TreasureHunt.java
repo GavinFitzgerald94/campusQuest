@@ -2,14 +2,13 @@ package com.example.campusquest;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
-import android.database.Cursor;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.AsyncTask;
@@ -19,24 +18,18 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
-import com.google.android.gms.common.api.GoogleApiActivity;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
@@ -44,7 +37,6 @@ import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.FitnessOptions;
 import com.google.android.gms.fitness.FitnessStatusCodes;
 import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
@@ -52,8 +44,6 @@ import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
-import com.google.android.gms.fitness.result.DailyTotalResult;
-
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -68,12 +58,10 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
-import java.text.DateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.jar.Manifest;
+
+//import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
@@ -294,20 +282,20 @@ public class TreasureHunt extends AppCompatActivity implements
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-                    .setTitleText("Good job!")
-                    .setContentText("You completed the Quest!")
-                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.dismissWithAnimation();
-                            Intent intent = new Intent(TreasureHunt.this, TreasureHuntHome.class);
-                            QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
-                            intent.putExtra("questInfo", questInfo);
-                            startActivity(intent);
-                        }
-                    })
-                    .show();
+//            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+//                    .setTitleText("Good job!")
+//                    .setContentText("You completed the Quest!")
+//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+//                        @Override
+//                        public void onClick(SweetAlertDialog sDialog) {
+//                            sDialog.dismissWithAnimation();
+//                            Intent intent = new Intent(TreasureHunt.this, TreasureHuntHome.class);
+//                            QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
+//                            intent.putExtra("questInfo", questInfo);
+//                            startActivity(intent);
+//                        }
+//                    })
+//                    .show();
         }
         new UpdateUserInfo().execute();
     }
