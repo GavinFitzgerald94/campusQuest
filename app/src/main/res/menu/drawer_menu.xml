@@ -6,7 +6,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_home"
-            android:title="Home" />
+            android:title="Quest Hub" />
         <item
             android:id="@+id/nav_leader_board"
             android:icon="@drawable/ic_leader_board"
@@ -14,10 +14,10 @@
         <item
             android:id="@+id/nav_friends"
             android:icon="@drawable/ic_friends"
-            android:title="Friends" />
+            android:title="Companions" />
         <item
             android:id="@+id/nav_sign_out"
             android:icon="@drawable/ic_sign_out"
-            android:title="SignOut" />
+            android:title="Leave CampusQuest" />
     </group>
 </menu>

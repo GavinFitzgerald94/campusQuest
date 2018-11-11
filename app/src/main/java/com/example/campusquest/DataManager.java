@@ -2,12 +2,11 @@ package com.example.campusquest;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.campusquest.CampusQuestDatabaseContract.*;
+import static com.example.campusquest.CampusQuestDatabaseContract.QuestsInfoEntry;
 
 /**
  * Singleton service for accessing and managing app data.
@@ -45,7 +44,8 @@ public class DataManager {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String[] questColumns = {
                 QuestsInfoEntry.COLUMN_QUEST_NAME,
-                QuestsInfoEntry.COLUMN_TOTAL_STAGES};
+                QuestsInfoEntry.COLUMN_TOTAL_STAGES,
+                QuestsInfoEntry.COLUMN_QUEST_ID};
         final Cursor questCursor = db.query(QuestsInfoEntry.TABLE_NAME, questColumns,
                 null, null, null, null, null);
         loadQuestsFromDatabase(questCursor);

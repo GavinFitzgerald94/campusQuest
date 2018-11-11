@@ -49,8 +49,8 @@ public class DatabaseDataWorker {
         ContentValues values = new ContentValues();
 
         values.put(CampusQuestDatabaseContract.QuestsInfoEntry.COLUMN_QUEST_ID, questId);
-        values.put(CampusQuestDatabaseContract.QuestsInfoEntry.COLUMN_QUEST_ID, questName);
-        values.put(CampusQuestDatabaseContract.QuestsInfoEntry.COLUMN_QUEST_ID, totalStages);
+        values.put(CampusQuestDatabaseContract.QuestsInfoEntry.COLUMN_QUEST_NAME, questName);
+        values.put(CampusQuestDatabaseContract.QuestsInfoEntry.COLUMN_TOTAL_STAGES, totalStages);
 
         long newRowId = mDb.insert(CampusQuestDatabaseContract.QuestsInfoEntry.TABLE_NAME, null, values);
     }
