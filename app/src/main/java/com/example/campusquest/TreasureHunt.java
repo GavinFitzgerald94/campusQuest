@@ -82,7 +82,7 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mQuestId;
     private int mCurrentStage;
     private int mTotalStage;
-    private String mClueText = "some test text";
+    private String mClueText;
     private String mClueId;
 
     private float distanceThreshold;
@@ -192,14 +192,14 @@ public class TreasureHunt extends AppCompatActivity implements
     public void clueFound() {
         if (mCurrentStage != mTotalStage) {
             mCurrentStage += 1;
-            loadCurrentStage(); // loads texxt view data
+            loadCurrentStage(); // loads text view data
             getLoaderManager().restartLoader(LOADER_CLUE, null, this);
         } else {
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
         }
-        updateUserInfo();
+        new UpdateUserInfo().execute();
     }
 
 
@@ -450,21 +450,30 @@ public class TreasureHunt extends AppCompatActivity implements
         clueValue.setText(mClueText);
     }
 
-    private void updateUserInfo() {
-        ContentValues values = new ContentValues(0);
+    private class UpdateUserInfo extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            ContentValues values = new ContentValues(0);
 
-        values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
-        values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
-        values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
-        if (mCurrentStage == mTotalStage) {
-            values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
-        } else {
-            values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+            values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
+            values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
+            values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            if (mCurrentStage == mTotalStage) {
+                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
+            } else {
+                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+            }
+
+            SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
+            long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
+
+            return null;
         }
-
-        SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
-        long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
     }
+
+
+
+
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {

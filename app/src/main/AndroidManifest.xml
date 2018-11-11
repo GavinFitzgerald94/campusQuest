@@ -26,16 +26,26 @@
         <activity
             android:name=".TreasureHunt"
             android:label="@string/title_activity_treasure_hunt"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".stats"></activity>
+        <activity android:name=".stats">
+
+        </activity>
         <activity
             android:name=".TreasureHuntHome"
             android:label="@string/title_activity_treasure_hunt_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
         <activity
             android:name=".TreasureHuntNoFitTest"
             android:label="@string/title_activity_treasure_hunt_no_fit_test"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
+
     </application>
 
 </manifest>
