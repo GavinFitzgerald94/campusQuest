@@ -63,6 +63,8 @@ import java.util.concurrent.TimeUnit;
 
 //import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
 import static com.example.campusquest.DataManager.getInstance;
@@ -282,20 +284,20 @@ public class TreasureHunt extends AppCompatActivity implements
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
-//            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
-//                    .setTitleText("Good job!")
-//                    .setContentText("You completed the Quest!")
-//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            sDialog.dismissWithAnimation();
-//                            Intent intent = new Intent(TreasureHunt.this, TreasureHuntHome.class);
-//                            QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
-//                            intent.putExtra("questInfo", questInfo);
-//                            startActivity(intent);
-//                        }
-//                    })
-//                    .show();
+            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+                    .setTitleText("Good job!")
+                    .setContentText("You completed the Quest!")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            Intent intent = new Intent(TreasureHunt.this, TreasureHuntHome.class);
+                            QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
+                            intent.putExtra("questInfo", questInfo);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
         }
         new UpdateUserInfo().execute();
     }
@@ -426,39 +428,39 @@ public class TreasureHunt extends AppCompatActivity implements
                             }
                         });
 
-        //Check for distance Raw Data
-        Fitness.getSensorsClient(this, GoogleSignIn.getLastSignedInAccount(this))
-                .findDataSources(
-                        new DataSourcesRequest.Builder()
-                                .setDataTypes(DataType.TYPE_DISTANCE_DELTA)
-                                .setDataSourceTypes(DataSource.TYPE_RAW)
-                                .build())
-                .addOnSuccessListener(
-                        new OnSuccessListener<List<DataSource>>() {
-                            @Override
-                            public void onSuccess(List<DataSource> dataSources) {
-                                for (DataSource dataSource : dataSources) {
-                                    TAG = "Looking for Location";
-                                    Log.i(TAG, "Data source found: " + dataSource.toString());
-                                    Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
-
-                                    // Let's register a listener to receive location data!
-                                    if (dataSource.getDataType().equals(DataType.TYPE_DISTANCE_DELTA)
-                                            && mListener == null) {
-                                        Log.i(TAG, "Data source for TYPE_DISTANCE_DELTA found!  Registering.");
-                                        //CHANGE
-                                        registerFitnessDataListener(dataSource, DataType.TYPE_DISTANCE_DELTA);
-                                    }
-                                }
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "failed", e);
-                            }
-                        });
+//        //Check for distance Raw Data
+//        Fitness.getSensorsClient(this, GoogleSignIn.getLastSignedInAccount(this))
+//                .findDataSources(
+//                        new DataSourcesRequest.Builder()
+//                                .setDataTypes(DataType.TYPE_DISTANCE_DELTA)
+//                                .setDataSourceTypes(DataSource.TYPE_RAW)
+//                                .build())
+//                .addOnSuccessListener(
+//                        new OnSuccessListener<List<DataSource>>() {
+//                            @Override
+//                            public void onSuccess(List<DataSource> dataSources) {
+//                                for (DataSource dataSource : dataSources) {
+//                                    TAG = "Looking for Location";
+//                                    Log.i(TAG, "Data source found: " + dataSource.toString());
+//                                    Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
+//
+//                                    // Let's register a listener to receive location data!
+//                                    if (dataSource.getDataType().equals(DataType.TYPE_DISTANCE_DELTA)
+//                                            && mListener == null) {
+//                                        Log.i(TAG, "Data source for TYPE_DISTANCE_DELTA found!  Registering.");
+//                                        //CHANGE
+//                                        registerFitnessDataListener(dataSource, DataType.TYPE_DISTANCE_DELTA);
+//                                    }
+//                                }
+//                            }
+//                        })
+//                .addOnFailureListener(
+//                        new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                Log.e(TAG, "failed", e);
+//                            }
+//                        });
     }
 
     /**
@@ -640,7 +642,7 @@ public class TreasureHunt extends AppCompatActivity implements
         String LOG = "Debug";
         Log.e(LOG, "mCurrentStage: "+mCurrentStage);
         switch (mCurrentStage) {
-            case 1:  Log.e(LOG, "mClueLocationsLat, mClueLocationsLng: "+mClueLocationsLat[0]+", "+mClueLocationsLng[0]);setUserLat(mClueLocationsLat[0]);setUserLng(mClueLocationsLng[0]);
+            case 1:  setUserLat(mClueLocationsLat[0]);setUserLng(mClueLocationsLng[0]);
                 break;
             case 2:  setUserLat(mClueLocationsLat[1]);setUserLng(mClueLocationsLng[1]);
                 break;
@@ -684,7 +686,7 @@ public class TreasureHunt extends AppCompatActivity implements
         }
         Log.e(LOG, "locationABSvalue: "+locationABSvalue+" distanceThreshold: "+distanceThreshold);
         if(locationABSvalue < distanceThreshold){
-            clueFound(); //TODO: Implement SWEET ALERT DIALOG for stylish display
+            clueFound();
         }
     }
 

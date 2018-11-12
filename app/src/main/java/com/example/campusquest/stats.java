@@ -79,9 +79,9 @@ public class stats extends AppCompatActivity implements
     private class GetData extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
 
-            long stepTotal = 0;
-            long caloriesTotal = 0;
-            long distanceTotal = 0;
+            int stepTotal = 0;
+            float caloriesTotal = 0;
+            float distanceTotal = 0;
 
             PendingResult<DailyTotalResult> result = Fitness.HistoryApi.readDailyTotal(mGoogleApiClient, DataType.TYPE_STEP_COUNT_DELTA);
             DailyTotalResult totalResult = result.await(30, TimeUnit.SECONDS);
@@ -103,7 +103,7 @@ public class stats extends AppCompatActivity implements
                 DataSet caloriesTotalSet = totalCaloriesResult.getTotal();
                 caloriesTotal = caloriesTotalSet.isEmpty()
                         ? 0
-                        : caloriesTotalSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).asInt();
+                        : caloriesTotalSet.getDataPoints().get(0).getValue(Field.FIELD_CALORIES).asFloat();
                 Log.i(TAG, "Total Calories Expended" + stepTotal);
             } else {
                 Log.w(TAG, "There was a problem getting the step count.");
@@ -116,26 +116,26 @@ public class stats extends AppCompatActivity implements
                 DataSet distanceTotalSet = totalDistanceResult.getTotal();
                 distanceTotal = distanceTotalSet.isEmpty()
                         ? 0
-                        : distanceTotalSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asInt();
+                        : distanceTotalSet.getDataPoints().get(0).getValue(Field.FIELD_DISTANCE).asFloat();
                 Log.i(TAG, "Total Distance traveled" + stepTotal);
             } else {
                 Log.w(TAG, "There was a problem getting the step count.");
             }
 
-            final long finalStepTotal = stepTotal;
-            final long finalCaloriesTotal = caloriesTotal;
-            final long finalDistanceTotal = distanceTotal;
+            final int finalStepTotal = stepTotal;
+            final float finalCaloriesTotal = caloriesTotal;
+            final float finalDistanceTotal = distanceTotal;
 
             //Chnange UI components on this thread
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     TextView steps = (TextView) findViewById(R.id.numberOfSteps);
-                    steps.setText("" + finalStepTotal);
+                    steps.setText(" "+finalStepTotal);
                     TextView calories = (TextView) findViewById(R.id.numberOfCaloriesBurned);
-                    calories.setText("" + finalCaloriesTotal);
+                    calories.setText(" "+ finalCaloriesTotal);
                     TextView distance = (TextView) findViewById(R.id.distanceTraveledNumber);
-                    distance.setText("" + finalDistanceTotal);
+                    distance.setText(" "+ finalDistanceTotal);
                 }
             });
 

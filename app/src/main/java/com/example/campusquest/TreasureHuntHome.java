@@ -9,8 +9,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
 
@@ -74,34 +77,36 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         startActivity(intent);
     }
 
-//
-//    public void resumeGamePopUp(View v) {
-//        String LOG = "Degbug";
-//        Log.e(LOG, "mCurrStage "+mPrevStage);
-//        if(mPrevStage == 1 || mPrevStage == 5){
-//            newGame(findViewById(R.id.button_resume_gamebutton));
-//        } else {
-//            //Sweet Alert Dialog
-//            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-//                    .setTitleText("Are you sure?")
-//                    .setContentText("You won't be able to recover your previous game!")
-//                    .setConfirmText("Yes, start new game!")
-//                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            sDialog.dismissWithAnimation();
-//                            newGame(findViewById(R.id.button_resume_gamebutton));
-//                        }
-//                    })
-//                    .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
-//                        @Override
-//                        public void onClick(SweetAlertDialog sDialog) {
-//                            sDialog.dismissWithAnimation();
-//                        }
-//                    })
-//                    .show();
-//        }
-//    }
+    /**
+     * Check if there is a existing game, confirm with user they want to erase this data and start a new game.
+     **/
+    public void resumeGamePopUp(View v) {
+        String LOG = "Degbug";
+        Log.e(LOG, "mCurrStage "+mPrevStage);
+        if(mPrevStage == 1 || mPrevStage == 5){
+            newGame(findViewById(R.id.button_resume_gamebutton));
+        } else {
+            //Sweet Alert Dialog
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Are you sure?")
+                    .setContentText("You won't be able to recover your previous game!")
+                    .setConfirmText("Yes!")
+                    .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                            newGame(findViewById(R.id.button_resume_gamebutton));
+                        }
+                    })
+                    .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.dismissWithAnimation();
+                        }
+                    })
+                    .show();
+        }
+    }
 
 
     /**
@@ -116,6 +121,14 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         bundle.putString("questName", mQuestName);
         bundle.putString("questId", mQuestId);
         intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    /**
+     * Navigate to the stats page
+     **/
+    public void navigateToStats(View view) {
+        Intent intent = new Intent(this, stats.class);
         startActivity(intent);
     }
 
