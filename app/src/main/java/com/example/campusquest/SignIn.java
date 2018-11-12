@@ -56,7 +56,8 @@ public class SignIn extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-}
+    }
+
 
     public void goToMainActivity(View view) {
         Intent intent = new Intent(this, MainActivity.class);
