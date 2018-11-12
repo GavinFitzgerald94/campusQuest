@@ -81,8 +81,10 @@ public class MainActivity extends AppCompatActivity implements
                 Toast.makeText(this, "Friends page clicked", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_leader_board:
-                //code to switch to leader board goes here.
-                Toast.makeText(this, "Leader board clicked", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.nav_stats:
+                Intent charIntent = new Intent(this, CharacterSheet.class);
+                startActivity(charIntent);
                 break;
             case R.id.nav_sign_out:
                 //code to sign out goes here

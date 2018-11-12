@@ -81,7 +81,8 @@ public class SignIn extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-}
+    }
+
 
 
     private boolean checkUser(String username, String password) {

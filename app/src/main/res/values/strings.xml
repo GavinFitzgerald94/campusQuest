@@ -22,4 +22,5 @@
     <string name="shr_hint_username">Username</string>
     <string name="shr_hint_password">Password</string>
     <string name="clue">Clue</string>
+    <string name="title_activity_character_sheet">CharacterSheet</string>
 </resources>
