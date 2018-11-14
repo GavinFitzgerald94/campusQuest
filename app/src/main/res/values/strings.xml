@@ -26,6 +26,6 @@
     <string name="nav_leaderboard">Leaderboard</string>
     <string name="nav_friends">Companions</string>
     <string name="nav_stats">Character Info</string>
-    <string name="nav_sign_out">Leave CampusQuest</string>
+    <string name="nav_sign_out">Exit CampusQuest</string>
     <string name="nav_about">About</string>
 </resources>
