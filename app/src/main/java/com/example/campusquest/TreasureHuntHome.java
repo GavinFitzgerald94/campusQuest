@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
@@ -27,6 +29,7 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     private int mCurrStage = 1;
     private int mTotalStage;
     private int mPrevStage;
+    private Drawer drawer;
     Button mResumeButton;
 
     @Override
@@ -39,7 +42,7 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerUtil.getDrawer(this, toolbar);
+        drawer = DrawerUtil.getDrawer(this, toolbar);
 
         initialiseQuestInfo(questInfo);
 
@@ -63,6 +66,14 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     protected void onDestroy() {
         super.onDestroy();
         mDbOpenHelper.close();
+    }
+
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     /**

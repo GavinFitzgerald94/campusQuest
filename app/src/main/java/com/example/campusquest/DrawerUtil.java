@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 /**
  * Base class for implementing material design drawer library
@@ -29,14 +34,54 @@ public class DrawerUtil {
     public static final int LOGOUT = 8;
     public static final int ABOUT = 7;
 
+    public static void getAccountHeader(Activity activity) {
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(activity)
+                .withHeaderBackground(R.drawable.ucd)
+                .addProfiles(
+                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(R.drawable.avatar_lara)
+                ).build();
+//                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+//                    @Override
+//                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+//                        return false;
+//                    }
+//                }
+//                )
+//                .build();
 
-    public static void getDrawer(final Activity activity, Toolbar toolbar) {
-        PrimaryDrawerItem drawerEmptyItem = new PrimaryDrawerItem().withIdentifier(0).withName("");
-        drawerEmptyItem.withEnabled(false);
-        PrimaryDrawerItem drawerItemLogo= new PrimaryDrawerItem().withIdentifier(1)
-                .withName("").withIcon(R.drawable.logo);
-        PrimaryDrawerItem drawerItemHeader = new PrimaryDrawerItem().withIdentifier(2)
-                .withName(R.string.nav_header_title);
+    }
+
+    /**
+     * Static method to create a navigation drawer item.
+     * @param activity
+     * @param toolbar
+     */
+
+    public static Drawer getDrawer(final Activity activity, Toolbar toolbar) {
+
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(activity)
+                .withHeaderBackground(R.drawable.ucd)
+                .addProfiles(
+                        new ProfileDrawerItem().withName(DataManager.getInstance().getCurrentUserName()).withEmail("useremail@gmail.com").withIcon(R.drawable.avatar_lara)
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        Intent intent = new Intent(activity, CharacterSheet.class);
+                        view.getContext().startActivity(intent);
+                        return false;
+                    }
+                })
+                .build();
+
+//        PrimaryDrawerItem drawerEmptyItem = new PrimaryDrawerItem().withIdentifier(0).withName("");
+//        drawerEmptyItem.withEnabled(false);
+//        PrimaryDrawerItem drawerItemLogo= new PrimaryDrawerItem().withIdentifier(1)
+//                .withName("").withIcon(R.drawable.logo);
+//        PrimaryDrawerItem drawerItemHeader = new PrimaryDrawerItem().withIdentifier(2)
+//                .withName(R.string.nav_header_title);
 
         SecondaryDrawerItem drawerItemHome = new SecondaryDrawerItem().withIdentifier(HOME)
                 .withName(R.string.nav_home).withIcon(R.drawable.ic_home);
@@ -54,6 +99,7 @@ public class DrawerUtil {
 
         //create the drawer and remember the `Drawer` result object
         drawer = new DrawerBuilder()
+                .withAccountHeader(headerResult)
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
@@ -61,9 +107,9 @@ public class DrawerUtil {
                 .withCloseOnClick(true)
                 .withSelectedItem(-1)
                 .addDrawerItems(
-                        drawerEmptyItem,drawerEmptyItem,
-                        drawerItemLogo,
-                        drawerItemHeader,
+//                        drawerEmptyItem,drawerEmptyItem,
+//                        drawerItemLogo,
+//                        drawerItemHeader,
                         new DividerDrawerItem(),
                         drawerItemHome,
                         drawerItemLeaderboard,
@@ -84,10 +130,10 @@ public class DrawerUtil {
                                 }
                                 break;
                             case LEADERBOAD:
-                                Toast.makeText(activity, "leaderboard clicked",  Toast.LENGTH_SHORT );
+                                //Action on click here
                                 break;
                             case FRIENDS:
-                                Toast.makeText(activity, "FRIENDS clicked",  Toast.LENGTH_SHORT );
+                                //Action on click here
                                 break;
                             case STATS:
                                 if(!(activity instanceof CharacterSheet)) {
@@ -96,10 +142,10 @@ public class DrawerUtil {
                                 }
                                 break;
                             case ABOUT:
-                                Toast.makeText(activity, "ABOUT clicked",  Toast.LENGTH_SHORT );
+                                //Action on click here
                                 break;
                             case LOGOUT:
-                                Toast.makeText(activity, "LOGOUT clicked",  Toast.LENGTH_SHORT );
+                                navigateToLogin(activity);
                                 break;
                         }
 
@@ -108,6 +154,14 @@ public class DrawerUtil {
                     }
                 })
                 .build();
+        return drawer;
+
+    }
+
+    public static void navigateToLogin(Activity activity) {
+        Intent intent = new Intent(activity, SignIn.class);
+        startActivity(activity, intent, null);
+        //finish()
     }
 }
 

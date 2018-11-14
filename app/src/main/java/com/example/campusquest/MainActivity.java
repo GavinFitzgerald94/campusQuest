@@ -2,14 +2,14 @@ package com.example.campusquest;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements
         AdapterView.OnItemSelectedListener {
     private CampusQuestOpenHelper mDbOpenHelper;
-    private DrawerLayout drawer;
+    private Drawer drawer;
     private Spinner mSpinnerQuests;
     private QuestInfo mSelectedQuest;
     private List<QuestInfo> mQuests;
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements
 //        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 // //       navigationView.setNavigationItemSelectedListener(this);
 
-        DrawerUtil.getDrawer(this,toolbar);
+        drawer =  DrawerUtil.getDrawer(this,toolbar);
 
         initialiseDisplayContent();
     }
@@ -103,8 +103,8 @@ public class MainActivity extends AppCompatActivity implements
      * Override back button pressed to close side navigation drawer first before exiting activity.
      */
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
         } else {
             super.onBackPressed();
         }

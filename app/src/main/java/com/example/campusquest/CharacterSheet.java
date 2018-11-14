@@ -7,6 +7,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -15,6 +17,7 @@ public class CharacterSheet extends AppCompatActivity implements
     private List<String> mAttributes;
     private Spinner mSpinnerAttributes;
     private String mSelectecAttribute;
+    private Drawer drawer;
 
 
     @Override
@@ -32,7 +35,7 @@ public class CharacterSheet extends AppCompatActivity implements
         buildSpinner();
         mSpinnerAttributes.setOnItemSelectedListener(this);
 
-        DrawerUtil.getDrawer(this,toolbar);
+        drawer = DrawerUtil.getDrawer(this,toolbar);
 
     }
 
@@ -51,5 +54,13 @@ public class CharacterSheet extends AppCompatActivity implements
     public void onNothingSelected(AdapterView<?> parent) {
         // Auto generated stub.
 
+    }
+
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
