@@ -22,9 +22,11 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         android:elevation="4dp" />
 
+        <include layout="@layout/content_main" />
+
     </LinearLayout>
 
-    <include layout="@layout/content_main" />
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
