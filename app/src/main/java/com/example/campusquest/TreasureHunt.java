@@ -698,10 +698,10 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
     /**
-     * Called when the user taps the stats button
+     * Called when the user taps the Stats button
      */
     public void statsView(View view) {
-        Intent intent = new Intent(this, stats.class);
+        Intent intent = new Intent(this, Stats.class);
         startActivity(intent);
     }
 

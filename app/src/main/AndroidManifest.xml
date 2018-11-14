@@ -36,7 +36,7 @@
             android:name=".TreasureHunt"
             android:label="@string/title_activity_treasure_hunt"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".stats" />
+        <activity android:name=".Stats" />
         <activity
             android:name=".TreasureHuntHome"
             android:label="@string/title_activity_treasure_hunt_home"
