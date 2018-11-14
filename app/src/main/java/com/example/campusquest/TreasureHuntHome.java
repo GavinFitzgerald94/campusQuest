@@ -98,8 +98,8 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
      **/
     public void resumeGamePopUp(View v) {
         String LOG = "Degbug";
-        Log.e(LOG, "mCurrStage "+mPrevStage);
-        if(mPrevStage == 1 || mPrevStage == 5){
+        Log.e(LOG, "mCurrStage "+ mResumeButton.getVisibility());
+        if(mResumeButton.getVisibility() != View.VISIBLE){
             newGame(findViewById(R.id.button_resume_gamebutton));
         } else {
             //Sweet Alert Dialog
