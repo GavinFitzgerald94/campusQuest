@@ -2,7 +2,6 @@ package com.example.campusquest;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,14 +21,18 @@ public class CharacterSheet extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_sheet);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         String[] arr =  {"Level", "Strength", "Endurance"};
         mAttributes = Arrays.asList(arr);
 
         mSpinnerAttributes = findViewById(R.id.spinner_attributes);
         buildSpinner();
         mSpinnerAttributes.setOnItemSelectedListener(this);
+
+        DrawerUtil.getDrawer(this,toolbar);
 
     }
 

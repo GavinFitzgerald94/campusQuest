@@ -36,6 +36,11 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         QuestInfo questInfo = getIntent().getExtras().getParcelable("questInfo");
         mDbOpenHelper = new CampusQuestOpenHelper(this);
 
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerUtil.getDrawer(this, toolbar);
+
         initialiseQuestInfo(questInfo);
 
     }
