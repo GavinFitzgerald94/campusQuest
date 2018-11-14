@@ -27,39 +27,26 @@ public class DrawerUtil {
 
     public static Drawer drawer;
 
+    // Set constants for use in drawer item selection.
     public static final int HOME = 3;
-    public static final int LEADERBOAD = 4;
+    public static final int LEADERBOARD = 4;
     public static final int FRIENDS = 5;
     public static final int STATS = 6;
     public static final int LOGOUT = 8;
     public static final int ABOUT = 7;
 
-    public static void getAccountHeader(Activity activity) {
-        AccountHeader headerResult = new AccountHeaderBuilder()
-                .withActivity(activity)
-                .withHeaderBackground(R.drawable.ucd)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(R.drawable.avatar_lara)
-                ).build();
-//                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
-//                    @Override
-//                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
-//                        return false;
-//                    }
-//                }
-//                )
-//                .build();
-
-    }
 
     /**
-     * Static method to create a navigation drawer item.
+     * Static method to create a navigation drawer and populate it with drawer items.
+     * Implements a listener method which responds to clicks on navigation items in drawer.
+     *
      * @param activity
      * @param toolbar
      */
 
     public static Drawer getDrawer(final Activity activity, Toolbar toolbar) {
 
+        // Create account header - header item of nav drawer.
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .withHeaderBackground(R.drawable.ucd)
@@ -76,29 +63,30 @@ public class DrawerUtil {
                 })
                 .build();
 
-//        PrimaryDrawerItem drawerEmptyItem = new PrimaryDrawerItem().withIdentifier(0).withName("");
-//        drawerEmptyItem.withEnabled(false);
-//        PrimaryDrawerItem drawerItemLogo= new PrimaryDrawerItem().withIdentifier(1)
-//                .withName("").withIcon(R.drawable.logo);
-//        PrimaryDrawerItem drawerItemHeader = new PrimaryDrawerItem().withIdentifier(2)
-//                .withName(R.string.nav_header_title);
-
+        // Create drawer items
         SecondaryDrawerItem drawerItemHome = new SecondaryDrawerItem().withIdentifier(HOME)
-                .withName(R.string.nav_home).withIcon(R.drawable.ic_home);
-        SecondaryDrawerItem drawerItemLeaderboard= new SecondaryDrawerItem().withIdentifier(LEADERBOAD)
-                .withName(R.string.nav_leaderboard).withIcon(R.drawable.ic_leader_board);
+                .withName(R.string.nav_home).withIcon(R.drawable.ic_home)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
+        SecondaryDrawerItem drawerItemLeaderboard = new SecondaryDrawerItem().withIdentifier(LEADERBOARD)
+                .withName(R.string.nav_leaderboard).withIcon(R.drawable.ic_leader_board)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
         SecondaryDrawerItem drawerItemFriends = new SecondaryDrawerItem().withIdentifier(FRIENDS)
-                .withName(R.string.nav_friends).withIcon(R.drawable.ic_friends);
+                .withName(R.string.nav_friends).withIcon(R.drawable.ic_friends)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
         SecondaryDrawerItem drawerItemStats = new SecondaryDrawerItem().withIdentifier(STATS)
-                .withName(R.string.nav_stats).withIcon(R.drawable.ic_stats);
+                .withName(R.string.nav_stats).withIcon(R.drawable.ic_stats)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
         SecondaryDrawerItem drawerItemAbout = new SecondaryDrawerItem().withIdentifier(ABOUT)
-                .withName(R.string.nav_about).withIcon(R.drawable.ic_stats);
+                .withName(R.string.nav_about).withIcon(R.drawable.ic_stats)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
 
         PrimaryDrawerItem drawerItemLogout = new PrimaryDrawerItem().withIdentifier(LOGOUT)
-                .withName(R.string.nav_sign_out).withIcon(R.drawable.ic_sign_out);
+                .withName(R.string.nav_sign_out).withIcon(R.drawable.ic_sign_out)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
 
-        //create the drawer and remember the `Drawer` result object
+        // Create the drawer object
         drawer = new DrawerBuilder()
+                .withSliderBackgroundColorRes(R.color.drawer_background)
                 .withAccountHeader(headerResult)
                 .withActivity(activity)
                 .withToolbar(toolbar)
@@ -107,9 +95,6 @@ public class DrawerUtil {
                 .withCloseOnClick(true)
                 .withSelectedItem(-1)
                 .addDrawerItems(
-//                        drawerEmptyItem,drawerEmptyItem,
-//                        drawerItemLogo,
-//                        drawerItemHeader,
                         new DividerDrawerItem(),
                         drawerItemHome,
                         drawerItemLeaderboard,
@@ -122,21 +107,21 @@ public class DrawerUtil {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        switch((int) drawerItem.getIdentifier()) {
+                        switch ((int) drawerItem.getIdentifier()) {
                             case HOME:
-                                if(!(activity instanceof MainActivity)) {
+                                if (!(activity instanceof MainActivity)) {
                                     Intent intent = new Intent(activity, MainActivity.class);
                                     view.getContext().startActivity(intent);
                                 }
                                 break;
-                            case LEADERBOAD:
+                            case LEADERBOARD:
                                 //Action on click here
                                 break;
                             case FRIENDS:
                                 //Action on click here
                                 break;
                             case STATS:
-                                if(!(activity instanceof CharacterSheet)) {
+                                if (!(activity instanceof CharacterSheet)) {
                                     Intent intent = new Intent(activity, CharacterSheet.class);
                                     view.getContext().startActivity(intent);
                                 }
@@ -161,14 +146,6 @@ public class DrawerUtil {
     public static void navigateToLogin(Activity activity) {
         Intent intent = new Intent(activity, SignIn.class);
         startActivity(activity, intent, null);
-        //finish()
+        //TODO clear stack !?
     }
 }
-
-//switch (mSelectedQuest.getQuestId()) {
-//        case "QU01":
-//        navigateTreasureHuntHome(mSelectedQuest);
-//        break;
-//        case "QU02":
-//        Toast.makeText(this, "This quest has not been implemented yet.", Toast.LENGTH_LONG).show();
-//        }
