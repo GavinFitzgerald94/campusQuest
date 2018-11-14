@@ -7,8 +7,11 @@
     <color name="color_FA5864">#FA5864</color>
     <color name="blue">#525b91</color>
     <color name="indigo">#3a469d</color>
-
+  
     //cardColors
     <color name="viewBg">#f1f5f8</color>
     <color name="album_title">#4c4c4c</color>
+
+    <color name="drawer_background">#303133</color>
+    <color name="drawer_text">#e4e7ef</color>
 </resources>

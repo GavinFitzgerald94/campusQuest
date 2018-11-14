@@ -10,7 +10,7 @@ public class DatabaseDataWorker {
         mDb = sqLiteDatabase;
     }
 
-    public void insertSampleUser() {
+    public void insertUsers() {
         insertUser("testName", "testPassword", "UCD", 0, 0, "");
     }
 
@@ -31,7 +31,7 @@ public class DatabaseDataWorker {
 //        insertUserQuestInfo("testName", "QU01", 3, 0, "");
 //    }
 
-    private void insertUser(String username, String password, String university, int age,
+    public void insertUser(String username, String password, String university, int age,
                             double weight, String phone) {
         ContentValues values = new ContentValues();
 

@@ -5,12 +5,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
-import com.example.campusquest.CampusQuestDatabaseContract;
-
 public class CampusQuestOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "CampusQuest.db";
     public static final int DATEBASE_VERSION = 1;
+    private DatabaseDataWorker worker;
 
     public CampusQuestOpenHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, DATEBASE_VERSION);
@@ -23,8 +22,8 @@ public class CampusQuestOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CampusQuestDatabaseContract.UserQuestsInfoEntry.SQL_CREATE_TABLE);
         sqLiteDatabase.execSQL(CampusQuestDatabaseContract.CluesInfoEntry.SQL_CREATE_TABLE);
 
-        DatabaseDataWorker worker = new DatabaseDataWorker(sqLiteDatabase);
-        worker.insertSampleUser();
+        worker = new DatabaseDataWorker(sqLiteDatabase);
+        worker.insertUsers();
         worker.insertQuests();
         worker.insertClues();
         //worker.insertUserQuestInfo();
@@ -34,5 +33,9 @@ public class CampusQuestOpenHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         //TODO 
 
+    }
+
+    public void insertNewUsers (){
+        worker.insertUsers();
     }
 }
