@@ -130,10 +130,10 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     }
 
     /**
-     * Navigate to the stats page
+     * Navigate to the Stats page
      **/
     public void navigateToStats(View view) {
-        Intent intent = new Intent(this, stats.class);
+        Intent intent = new Intent(this, Stats.class);
         startActivity(intent);
     }
 

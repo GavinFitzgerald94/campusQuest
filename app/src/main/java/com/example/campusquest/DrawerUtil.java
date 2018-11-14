@@ -20,6 +20,8 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 public class DrawerUtil {
 
+    public static Drawer drawer;
+
     public static final int HOME = 3;
     public static final int LEADERBOAD = 4;
     public static final int FRIENDS = 5;
@@ -51,7 +53,7 @@ public class DrawerUtil {
                 .withName(R.string.nav_sign_out).withIcon(R.drawable.ic_sign_out);
 
         //create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
+        drawer = new DrawerBuilder()
                 .withActivity(activity)
                 .withToolbar(toolbar)
                 .withActionBarDrawerToggle(true)
@@ -100,6 +102,8 @@ public class DrawerUtil {
                                 Toast.makeText(activity, "LOGOUT clicked",  Toast.LENGTH_SHORT );
                                 break;
                         }
+
+                        drawer.closeDrawer();
                         return true;
                     }
                 })

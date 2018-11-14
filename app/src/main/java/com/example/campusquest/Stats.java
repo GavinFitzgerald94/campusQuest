@@ -8,8 +8,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -27,7 +25,7 @@ import com.google.android.gms.fitness.result.DailyTotalResult;
 
 import java.util.concurrent.TimeUnit;
 
-public class stats extends AppCompatActivity implements
+public class Stats extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
@@ -144,7 +142,7 @@ public class stats extends AppCompatActivity implements
     }
 
     public void readData() {
-        new stats.GetData().execute();
+        new Stats.GetData().execute();
     }
 
     @Override
