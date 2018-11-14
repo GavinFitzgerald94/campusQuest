@@ -146,6 +146,6 @@ public class DrawerUtil {
     public static void navigateToLogin(Activity activity) {
         Intent intent = new Intent(activity, SignIn.class);
         startActivity(activity, intent, null);
-        //TODO clear stack !?
+        activity.finish();
     }
 }
