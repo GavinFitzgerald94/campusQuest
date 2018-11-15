@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         //Initialize card object
         MaterialLargeImageCard card =
                 MaterialLargeImageCard.with(this)
-                        .useDrawableId(R.drawable.run_icon)
+                        .useDrawableId(R.drawable.treasure_map)
                         .setTitle("Treasure Hunt")
                         .setSubTitle("Description of game goes here.")
                         .setupSupplementalActions(R.layout.native_material_icon,actions )
@@ -112,10 +112,9 @@ public class MainActivity extends AppCompatActivity {
         //Initialize card object
         MaterialLargeImageCard card2 =
                 MaterialLargeImageCard.with(this)
-                        .useDrawableId(R.drawable.logo)
+                        .useDrawableId(R.drawable.spy_chase)
                         .setTitle("Spy Chase")
                         .setSubTitle("Description of game goes here.")
-                        .setupSupplementalActions(R.layout.native_material_icon,actions )
                         .build();
 
         card2.setOnClickListener(new Card.OnCardClickListener() {
