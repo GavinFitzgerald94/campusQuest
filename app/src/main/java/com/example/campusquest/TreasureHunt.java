@@ -176,72 +176,7 @@ public class TreasureHunt extends AppCompatActivity implements
 
     }
 
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // For showing a move to my location button
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            String LOG = "Permissions Error";
-            Log.e(TAG,"Do not have user permission for Fine or Coarse location");
-            return;
-        }
-
-        //Below settings are not working yet
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.setMyLocationEnabled(true);
-        mMap.setOnMyLocationButtonClickListener(this);
-        mMap.setOnMyLocationClickListener(this);
-
-        float userLat = getUserLat();
-        float userLng = getUserLng();
-
-        LatLng user = new LatLng(userLat, userLng);
-        now = mMap.addMarker(new MarkerOptions().position(user).title("Your Location"));
-
-        // For zooming automatically to the location of the marker
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(user).zoom(16).build();
-        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-    }
-
-    public void onLocationChanged() {
-
-        if(now != null){
-            now.remove();
-        }
-
-        float userLat = getUserLat();
-        float userLng = getUserLng();
-
-        LatLng user = new LatLng(userLat, userLng);
-        now = mMap.addMarker(new MarkerOptions().position(user).title("Your Location"));
-        // For zooming automatically to the location of the marker
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(user).zoom(16).build();
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-    }
-
-    @Override
-    public void onMyLocationClick(@NonNull Location location) {
-        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public boolean onMyLocationButtonClick() {
-        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
-        // Return false so that we don't consume the event and the default behavior still occurs
-        // (the camera animates to the user's current position).
-        return false;
-    }
-
-
+    /** Callback function to check if permissions are correct */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -251,11 +186,8 @@ public class TreasureHunt extends AppCompatActivity implements
         }
 
     }
-    public String getCurrentUser() {
-        DataManager data = getInstance();
-        return data.getCurrentUserName();
-    }
 
+    /** Additional callback function to check if runtime permissions are correct */
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case 1: {
@@ -265,14 +197,85 @@ public class TreasureHunt extends AppCompatActivity implements
                     recordData();
                     trackLocation();
                 } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
+                    // permission denied, boo!
                 }
                 return;
             }
             // other 'case' lines to check for other
             // permissions this app might request
         }
+    }
+
+    /** Callback function for when the map is ready to be used */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        // Check for fine location permission, needs to be checked at run time in order to display map current location to user.
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            String LOG = "Permissions Error";
+            Log.e(TAG,"Do not have user permission for Fine or Coarse location");
+            return;
+        }
+
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.setMyLocationEnabled(true);
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
+
+        float userLat = getUserLat();
+        float userLng = getUserLng();
+        LatLng user = new LatLng(userLat, userLng);
+
+        //Adds marker at users location.
+        // *NOTE* not needed on mobile as "mMap.getUiSettings().setMyLocationButtonEnabled(true);" displays user location but on emulator this will not work so this is used instead.
+        now = mMap.addMarker(new MarkerOptions().position(user).title("Your Location"));
+
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(user).zoom(16).build();
+        googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    /** Function called when a users location has changed */
+    public void onLocationChanged() {
+
+        //removes google map marker if it exits
+        if(now != null){
+            now.remove();
+        }
+
+        //gets users new latitude and longitude
+        float userLat = getUserLat();
+        float userLng = getUserLng();
+        LatLng user = new LatLng(userLat, userLng);
+
+        //sets marker for users updated location, this is only needed to display location when using a emulator, on mobile displaying location is handled by google map library "mMap.getUiSettings().setMyLocationButtonEnabled(true);"
+        now = mMap.addMarker(new MarkerOptions().position(user).title("Your Location"));
+        // For zooming automatically to the location of the marker
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(user).zoom(16).build();
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
+
+    /** Called when user location icon is clicked (only on mobile not visible on emulator) */
+    @Override
+    public void onMyLocationClick(@NonNull Location location) {
+        Toast.makeText(this, "Current location:\n" + location, Toast.LENGTH_LONG).show();
+    }
+
+    /** Called when user location button is clicked (only on mobile not visible on emulator) */
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Toast.makeText(this, "MyLocation button clicked", Toast.LENGTH_SHORT).show();
+        // Return false so that we don't consume the event and the default behavior still occurs
+        // (the camera animates to the user's current position).
+        return false;
+    }
+
+    /** Returns current user */
+    public String getCurrentUser() {
+        DataManager data = getInstance();
+        return data.getCurrentUserName();
     }
 
     public void clueFound() {
@@ -304,7 +307,7 @@ public class TreasureHunt extends AppCompatActivity implements
 
 
     /**
-     * Creates Recording subscription, this data is recorded constantly in the background in a battery efficent manner.
+     * Creates Recording subscription, this data is recorded constantly in the background in a battery efficient manner.
      * Records data to users google fit account which can be accessed through the history api later
      */
     private void recordData() {
@@ -374,12 +377,13 @@ public class TreasureHunt extends AppCompatActivity implements
         loadCurrentStage();
     }
 
+    /** Gets users current stage in quest */
     private void loadCurrentStage() {
         TextView currStageValue = findViewById(R.id.currentStage);
         currStageValue.setText(String.valueOf("Current Stage: "+mCurrentStage));
     }
 
-
+    /** Sets quest name and total number of stages in quest */
     private void loadViewContent() {
         TextView questValue = findViewById(R.id.questName);
         questValue.setText(mQuestName);
@@ -464,7 +468,7 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
     /**
-     * Uses google fits sensors client to add a listener
+     * Uses google fits sensors client to add a listener which receives user fitness data
      */
     private void registerFitnessDataListener(DataSource dataSource, DataType dataType) {
 
@@ -619,24 +623,44 @@ public class TreasureHunt extends AppCompatActivity implements
 
     }
 
+    /**
+     * Set user latitude
+     *
+     * @param: latitude, a float representing users latitude
+     * */
     public void setUserLat(float latitude) {
         this.userLat = latitude;
     }
 
+    /**
+     * Set user longitude
+     *
+     * @param: longitude, a float representing users longitude
+     * */
     public void setUserLng(float longitude) {
         this.userLng = longitude;
     }
 
+    /**
+     * Get user latitude
+     *
+     * @return: Users latitude
+     * */
     public float getUserLat() {
         return userLat;
     }
 
+    /**
+     * Get user longitude
+     *
+     * @return: Users longitude
+     * */
     public float getUserLng() {
         return userLng;
     }
 
     /**
-     * Function to fake the correct coordinates of user for testing to debug
+     * Function to fake the correct coordinates of user location, to move them to next stage of treasure hunt
      * */
     public void fakeFindClueLocation(View view) {
         String LOG = "Debug";
@@ -657,7 +681,11 @@ public class TreasureHunt extends AppCompatActivity implements
         checkLocation();
     }
 
+    /**
+     * Checks the absolute difference between user location and clue location, if below threshold clueFound() is called
+     * */
     public void checkLocation() {
+        //**NEED TO CHANGE TO GREATER CIRCLE DISTANCE INSTEAD OF ABSOLUTE DIFFERENCE**
         String LOG = "Debug Location Check";
         Log.e(LOG, "mClueLat: "+mClueLat+" mClueLng: "+mClueLong);
         Log.e(LOG, "userLat: "+userLat+" userLng: "+userLng);
@@ -697,32 +725,26 @@ public class TreasureHunt extends AppCompatActivity implements
     public void onClick(View v) {
     }
 
+
     /**
-     * Called when the user taps the Stats button
+     * Google fit api callback method, called when connection has been suspended
      */
-    public void statsView(View view) {
-        Intent intent = new Intent(this, Stats.class);
-        startActivity(intent);
-    }
-
-//    /**
-//     * Display user location for debugging
-//     */
-//    public void uLocation(View view) {
-//        TextView latLng = (TextView) findViewById(R.id.userLocation);
-//        latLng.setText("Latitude: " + userLat + " Longitude: " + userLng);
-//    }
-
     @Override
     public void onConnectionSuspended(int i) {
         Log.i("HistoryAPI", "onConnectionSuspended");
     }
 
+    /**
+     * Google fit api callback method, called when connected has failed
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("HistoryAPI", "onConnectionFailed");
     }
 
+    /**
+     * Google fit api callback method, called when connected successfully
+     */
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("HistoryAPI", "onConnected");
     }
