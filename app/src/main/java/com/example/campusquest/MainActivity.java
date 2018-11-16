@@ -37,19 +37,12 @@ import it.gmariotti.cardslib.library.view.CardViewNative;
  */
 
 //NavigationView.OnNavigationItemSelectedListener,
-public class MainActivity extends AppCompatActivity implements
-
-        AdapterView.OnItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
     private CampusQuestOpenHelper mDbOpenHelper;
     private Drawer drawer;
     private Spinner mSpinnerQuests;
     private QuestInfo mSelectedQuest;
     private List<QuestInfo> mQuests;
-
-    //cardVariables
-    private RecyclerView recyclerView;
-    private QuestCardAdapter adapter;
-    private List<QuestCard> questCardList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,11 +73,10 @@ public class MainActivity extends AppCompatActivity implements
         initialiseDisplayContent();
 
 
-
-        // Set supplemental actions as text
+        /** API taken from "cardslib" library by Gabriele Mariotti can be found at - https://github.com/gabrielemariotti/cardslib */
+        //Array to hold extra actions to be put at end of card "Play" for example.
         ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
-
-        // Set supplemental actions
+        // Set supplemental actions ("Play" etc.)
         TextSupplementalAction t1 = new TextSupplementalAction(this, R.id.text1);
         t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
             @Override
@@ -96,15 +88,15 @@ public class MainActivity extends AppCompatActivity implements
                         quest = i;
                     }
                 }
-                Toast.makeText(getApplicationContext()," Click on Start",Toast.LENGTH_SHORT).show();
                 navigateTreasureHuntHome(quest);
             }
         });
         actions.add(t1);
 
+        //Initialize card object
         MaterialLargeImageCard card =
                 MaterialLargeImageCard.with(this)
-                        .useDrawableId(R.drawable.run_icon)
+                        .useDrawableId(R.drawable.treasure_map)
                         .setTitle("Treasure Hunt")
                         .setSubTitle("Description of game goes here.")
                         .setupSupplementalActions(R.layout.native_material_icon,actions )
@@ -117,12 +109,12 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        //Initialize card object
         MaterialLargeImageCard card2 =
                 MaterialLargeImageCard.with(this)
-                        .useDrawableId(R.drawable.logo)
+                        .useDrawableId(R.drawable.spy_chase)
                         .setTitle("Spy Chase")
                         .setSubTitle("Description of game goes here.")
-                        .setupSupplementalActions(R.layout.native_material_icon,actions )
                         .build();
 
         card2.setOnClickListener(new Card.OnCardClickListener() {
@@ -132,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
+        //Bind cards to xml
         CardViewNative cardViewNative = findViewById(R.id.carddemo_largeimage);
         cardViewNative.setCard(card);
 

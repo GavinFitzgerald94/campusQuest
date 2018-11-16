@@ -76,13 +76,13 @@ public class SignUp extends AppCompatActivity {
                             worker.insertUser(user, pwd, "UCD", 24, 70, null);
                             // Pop a new sweet alert  bllock
                             new SweetAlertDialog(SignUp.this, SweetAlertDialog.SUCCESS_TYPE)
-                                    .setTitleText("Oops")
-                                    .setContentText("Sign up successfully!")
+                                    .setTitleText("Perfect")
+                                    .setContentText("Sign up successful!")
                                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                                         @Override
                                         public void onClick(SweetAlertDialog sDialog) {
                                             // Add cilck event listener to the button
-                                            Intent intent = new Intent(SignUp.this, SignIn.class);
+                                            Intent intent = new Intent(SignUp.this, MainActivity.class);
                                             // Starting SignIn Activity
                                             startActivity(intent);
                                         }

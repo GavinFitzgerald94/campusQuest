@@ -73,7 +73,9 @@ public class Stats extends AppCompatActivity implements
     }
 
 
-    /** Accesses google fit history and displays user data onscreen. */
+    /**
+     * Accesses users google fit history and update UI to display it.
+     * */
     private class GetData extends AsyncTask<Void, Void, Void> {
         protected Void doInBackground(Void... params) {
 
@@ -141,20 +143,30 @@ public class Stats extends AppCompatActivity implements
         }
     }
 
+    /** Starts new thread to get user fitness data */
     public void readData() {
         new Stats.GetData().execute();
     }
 
+    /**
+     * Google fit api callback method, called when connection has been suspended
+     */
     @Override
     public void onConnectionSuspended(int i) {
         Log.i("HistoryAPI", "onConnectionSuspended");
     }
 
+    /**
+     * Google fit api callback method, called when connected has failed
+     */
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("HistoryAPI", "onConnectionFailed");
     }
 
+    /**
+     * Google fit api callback method, called when connected successfully
+     */
     public void onConnected(@Nullable Bundle bundle) {
         Log.i("HistoryAPI", "onConnected");
     }

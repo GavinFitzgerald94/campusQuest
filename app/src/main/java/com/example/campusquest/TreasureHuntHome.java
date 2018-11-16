@@ -94,7 +94,7 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     }
 
     /**
-     * Check if there is a existing game, confirm with user they want to erase this data and start a new game.
+     * Check if there is a existing game, confirm with user they want to erase this previous game data and start a new game.
      **/
     public void resumeGamePopUp(View v) {
         String LOG = "Degbug";
