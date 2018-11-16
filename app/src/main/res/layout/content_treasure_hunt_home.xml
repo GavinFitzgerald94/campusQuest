@@ -3,34 +3,49 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_gravity="center">
+    android:background="#FFFFFF">
+
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="280dp"
         android:src="@drawable/treasure" />
+
     <Button
-        style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/button_new_gamebutton"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="8dp"
+        android:fontFamily="@font/quite_magical"
+        android:textSize="30dp"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/buttonstyle"
         android:onClick="resumeGamePopUp"
         android:text="@string/new_game" />
+
     <Button
-        style="@style/Widget.AppCompat.Button.Colored"
         android:id="@+id/button_resume_gamebutton"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="8dp"
+        android:fontFamily="@font/quite_magical"
+        android:textSize="30dp"
+        android:textColor="@color/colorAccent"
+        android:background="@drawable/buttonstyle"
         android:onClick="resumeGame"
         android:text="@string/resume_game" />
 
     <Button
         android:id="@+id/button_statistics"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="200dp"
+        android:background="@drawable/buttonstyle"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:fontFamily="@font/quite_magical"
+        android:textSize="30dp"
+        android:textColor="@color/colorAccent"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="8dp"
         android:onClick="navigateToStats"
         android:text="@string/statistics" />
 </LinearLayout>

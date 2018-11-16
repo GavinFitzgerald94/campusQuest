@@ -200,13 +200,13 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Override
+//    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mSelectedQuest = (QuestInfo) parent.getItemAtPosition(position);
 
     }
 
-    @Override
+//    @Override
     public void onNothingSelected(AdapterView<?> parent) {
         // Do nothing - auto-generated stub.
     }
