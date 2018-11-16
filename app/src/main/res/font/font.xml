@@ -4,4 +4,12 @@
         android:fontWeight="400"
         android:fontStyle="normal"
         android:font="@font/quite_magical" />
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/getho_light"/>
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="400"
+        android:font="@font/getho_bold"/>
 </font-family>

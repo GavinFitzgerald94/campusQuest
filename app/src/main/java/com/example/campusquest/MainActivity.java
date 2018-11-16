@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements
     private Drawer drawer;
     private Spinner mSpinnerQuests;
     private QuestInfo mSelectedQuest;
-   private List<QuestInfo> mQuests;
+    private List<QuestInfo> mQuests;
 
     //cardVariables
     private RecyclerView recyclerView;
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
 //        mSpinnerQuests = findViewById(R.id.spinner_quest);
-       DataManager.loadQuests(mDbOpenHelper);
+        DataManager.loadQuests(mDbOpenHelper);
         mQuests = DataManager.getInstance().getQuests();
 //        buildSpinner();
 //        mSpinnerQuests.setOnItemSelectedListener(this);
@@ -179,8 +179,8 @@ public class MainActivity extends AppCompatActivity implements
 //
 //        return true;
 
-        // code to change fragments
-        // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentName()).commit();
+    // code to change fragments
+    // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new FragmentName()).commit();
     // / }
 
     @Override
@@ -206,18 +206,17 @@ public class MainActivity extends AppCompatActivity implements
         mDbOpenHelper.close();
         super.onDestroy();
     }
-  
-//
-//    @Override
-//    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//        mSelectedQuest = (QuestInfo) parent.getItemAtPosition(position);
-//
-//    }
 
-//    @Override
-//    public void onNothingSelected(AdapterView<?> parent) {
-//        // Do nothing - auto-generated stub.
-//    }
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        mSelectedQuest = (QuestInfo) parent.getItemAtPosition(position);
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+        // Do nothing - auto-generated stub.
+    }
 
     /**
      * Navigates to the treasure hunt home page.

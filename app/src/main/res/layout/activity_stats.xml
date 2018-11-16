@@ -7,78 +7,12 @@
     tools:context=".Stats"
     android:orientation="vertical">
 
-    <!--<ImageView-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:layout_width="84dp"-->
-        <!--android:layout_height="74dp"-->
-        <!--android:layout_marginStart="8dp"-->
-        <!--android:layout_marginTop="45dp"-->
-        <!--android:layout_marginEnd="8dp"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent"-->
-        <!--tools:srcCompat="@tools:sample/avatars[3]" />-->
-
-    <!--<LinearLayout-->
-        <!--android:layout_width="368dp"-->
-        <!--android:layout_height="219dp"-->
-        <!--android:layout_marginTop="24dp"-->
-        <!--android:orientation="vertical"-->
-        <!--app:layout_constraintTop_toBottomOf="@+id/imageView"-->
-        <!--tools:layout_editor_absoluteX="8dp">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/stepsToday"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Steps Taken Today"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="24sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/numberOfSteps"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="0"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="18sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/CaloriesBurnedToday"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Calories Burned Today"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="24sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/numberOfCaloriesBurned"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="0"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="18sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/DistanceTraveledToday"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="Distance Traveled Today"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="24sp" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/distanceTraveledNumber"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="0"-->
-            <!--android:textAlignment="center"-->
-            <!--android:textSize="18sp" />-->
-    <!--</LinearLayout>-->
-
     <RelativeLayout
+        android:layout_weight="1.0"
+        android:id="@+id/up"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal">
         <ImageView
             android:id="@+id/run_icon"
             android:layout_width="230dp"
@@ -92,47 +26,58 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="Your stats"
+            android:fontFamily="@font/getho_bold"
             android:textSize="30sp"
             android:layout_toRightOf="@+id/run_icon"/>
     </RelativeLayout>
+
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_weight="1.0"
+        android:orientation="vertical">
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:layout_gravity="center"
+            android:background="@color/babypink"
+            android:layout_weight="0.333"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/steps_icon"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
                 android:src="@drawable/steps_icon" />
+
             <TextView
                 android:id="@+id/stepsToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/steps_icon"
+                android:fontFamily="@font/getho_bold"
                 android:text="  Steps"
                 android:textSize="24sp" />
+
             <TextView
                 android:id="@+id/numberOfSteps"
-                android:layout_width="match_parent"
+                android:layout_width="54dp"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/stepsToday"
+                android:fontFamily="@font/getho_bold"
                 android:text=" 0"
                 android:textSize="24sp" />
-
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:layout_gravity="center"
+            android:background="@color/traffy"
+            android:layout_weight="0.333"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/calories_icon"
@@ -145,22 +90,27 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/calories_icon"
+                android:fontFamily="@font/getho_bold"
                 android:text="  Calories"
                 android:textSize="24sp" />
+
             <TextView
                 android:id="@+id/numberOfCaloriesBurned"
-                android:layout_width="match_parent"
+                android:layout_width="34dp"
                 android:layout_height="wrap_content"
-                android:text=" 0"
                 android:layout_toRightOf="@id/CaloriesBurnedToday"
+                android:fontFamily="@font/getho_bold"
+                android:text=" 0"
                 android:textSize="24sp" />
-
         </RelativeLayout>
 
         <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_width="match_parent"
+            android:layout_height="80sp"
+            android:layout_gravity="center"
+            android:layout_weight="0.333"
+            android:background="@color/rosepink"
+            android:gravity="center">
 
             <ImageView
                 android:id="@+id/distance_icon"
@@ -173,15 +123,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@+id/distance_icon"
+                android:fontFamily="@font/getho_bold"
                 android:text="  Distance"
                 android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/distanceTraveledNumber"
-                android:layout_width="match_parent"
+                android:layout_width="29dp"
                 android:layout_height="wrap_content"
-                android:text=" 0"
                 android:layout_toRightOf="@+id/DistanceTraveledToday"
+                android:fontFamily="@font/getho_bold"
+                android:text=" 0"
                 android:textSize="24sp" />
         </RelativeLayout>
     </LinearLayout>
