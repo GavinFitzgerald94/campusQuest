@@ -36,11 +36,12 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_treasure_hunt_home);
-        QuestInfo questInfo = getIntent().getExtras().getParcelable("questInfo");
+        //QuestInfo questInfo = getIntent().getExtras().getParcelable("questInfo");
         mDbOpenHelper = new CampusQuestOpenHelper(this);
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
 
         drawer = DrawerUtil.getDrawer(this, toolbar);
 
