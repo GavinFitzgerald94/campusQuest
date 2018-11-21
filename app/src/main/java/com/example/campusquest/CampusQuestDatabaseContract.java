@@ -24,7 +24,8 @@ public final class CampusQuestDatabaseContract {
                         COLUMN_UNIVERSITY + " TEXT NOT NULL, " +
                         COLUMN_AGE + " NUMERIC, " +
                         COLUMN_WEIGHT + " NUMERIC, " +
-                        COLUMN_PHONE + " TEXT)";
+                        COLUMN_PHONE + " TEXT ) ";
+
     }
 
     public static final class QuestsInfoEntry implements BaseColumns {
@@ -39,25 +40,6 @@ public final class CampusQuestDatabaseContract {
                         COLUMN_QUEST_ID + " TEXT UNIQUE NOT NULL, " +
                         COLUMN_QUEST_NAME + " TEXT UNIQUE NOT NULL, " +
                         COLUMN_TOTAL_STAGES + " NUMERIC NOT NULL) ";
-    }
-
-    public static final class UserQuestsInfoEntry implements BaseColumns {
-        public static final String TABLE_NAME = "UserQuests";
-        public static final String COLUMN_USERNAME = "user_name";
-        public static final String COLUMN_QUEST_ID = "quest_id";
-        public static final String COLUMN_CURRENT_STAGE = "current_stage";
-        public static final String COLUMN_COMPLETED = "completed";
-        public static final String COLUMN_COMPLETION_DATE = "completion_date";
-
-
-        public static final String SQL_CREATE_TABLE =
-                "CREATE TABLE " + TABLE_NAME + " (" +
-                        _ID + " INTEGER PRIMARY KEY, " +
-                        COLUMN_USERNAME + " TEXT NOT NULL, " +
-                        COLUMN_QUEST_ID + " TEXT NOT NULL, " +
-                        COLUMN_CURRENT_STAGE + " NUMERIC NOT NULL, " +
-                        COLUMN_COMPLETED + " NUMERIC, " +
-                        COLUMN_COMPLETION_DATE + " DEFAULT CURRENT_TIMESTAMP)";
     }
 
     public static final class CluesInfoEntry implements BaseColumns {
@@ -80,4 +62,45 @@ public final class CampusQuestDatabaseContract {
                         COLUMN_CLUE_LONG + " NUMERIC, " +
                         COLUMN_CLUE_STAGE + " NUMERIC)";
     }
+
+    public static final class UserQuestsInfoEntry implements BaseColumns {
+        public static final String TABLE_NAME = "UserQuests";
+        public static final String COLUMN_USERNAME = "user_name";
+        public static final String COLUMN_QUEST_ID = "quest_id";
+        public static final String COLUMN_CURRENT_STAGE = "current_stage";
+        public static final String COLUMN_COMPLETED = "completed";
+        public static final String COLUMN_COMPLETION_DATE = "completion_date";
+
+
+        public static final String SQL_CREATE_TABLE =
+                "CREATE TABLE " + TABLE_NAME + " (" +
+                        _ID + " INTEGER PRIMARY KEY, " +
+                        COLUMN_USERNAME + " TEXT NOT NULL, " +
+                        COLUMN_QUEST_ID + " TEXT NOT NULL, " +
+                        COLUMN_CURRENT_STAGE + " NUMERIC NOT NULL, " +
+                        COLUMN_COMPLETED + " NUMERIC, " +
+                        COLUMN_COMPLETION_DATE + " DEFAULT CURRENT_TIMESTAMP)";
+    }
+
+    public static final class UserCharacterInfoEntry implements BaseColumns {
+        public static final String TABLE_NAME = "UserCharacter";
+        public static final String COLUMN_USERNAME = "user_name";
+        public static final String COLUMN_INTELLIGENCE = "intelligence";
+        public static final String COLUMN_STRENGTH = "strength";
+        public static final String COLUMN_ENDURANCE = "endurance";
+        public static final String COLUMN_LEVEL = "level";
+        public static final String COLUMN_COMPLETION_DATE = "completion_date";
+
+        public static final String SQL_CREATE_TABLE =
+                "CREATE TABLE " + TABLE_NAME + " (" +
+                        _ID + " INTEGER PRIMARY KEY, " +
+                        COLUMN_USERNAME + " TEXT NOT NULL, " +
+                        COLUMN_INTELLIGENCE + " NUMERIC, " +
+                        COLUMN_STRENGTH + " NUMERIC, " +
+                        COLUMN_ENDURANCE + " NUMERIC, " +
+                        COLUMN_LEVEL + " NUMERIC, " +
+                        COLUMN_COMPLETION_DATE + " DEFAULT CURRENT_TIMESTAMP)";
+    }
+
+
 }

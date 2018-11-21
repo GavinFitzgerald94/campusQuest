@@ -65,6 +65,7 @@ import java.util.concurrent.TimeUnit;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import static com.example.campusquest.CampusQuestDatabaseContract.*;
 import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
 import static com.example.campusquest.DataManager.getInstance;
@@ -594,30 +595,41 @@ public class TreasureHunt extends AppCompatActivity implements
         clueValue.setText(mClueText);
     }
 
+    /**
+     *  Update user quest current stage and if at final stage set quest as completed.
+     *  Increment appropriate character stats (here, intelligence and endurance) by 1
+     *  and if completed increment by 2.
+     *  Increment level by 1 if quest completed.
+     */
+
     private class UpdateUserInfo extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-            ContentValues values = new ContentValues(0);
+            ContentValues valuesQuest = new ContentValues(0);
+            ContentValues valuesCharacter = new ContentValues(0);
 
-            values.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
-            values.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
-            values.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            valuesQuest.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
+            valuesQuest.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
+            valuesQuest.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            // Check if quest is completed.
             if (mCurrentStage == mTotalStage) {
-                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
+                valuesQuest.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
+                valuesCharacter.put(UserCharacterInfoEntry.COLUMN_ENDURANCE, 2);
+                valuesCharacter.put(UserCharacterInfoEntry.COLUMN_INTELLIGENCE, 2);
+                valuesCharacter.put(UserCharacterInfoEntry.COLUMN_LEVEL, 1);
             } else {
-                values.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+                valuesQuest.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_INCOMPLETE);
+                valuesCharacter.put(UserCharacterInfoEntry.COLUMN_ENDURANCE, 1);
+                valuesCharacter.put(UserCharacterInfoEntry.COLUMN_INTELLIGENCE, 1);
             }
 
             SQLiteDatabase db = mDbOpenHelper.getWritableDatabase();
-            long newRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, values);
+            long questRowId = db.insert(UserQuestsInfoEntry.TABLE_NAME, null, valuesQuest);
+            long charRowId = db.insert(UserCharacterInfoEntry.TABLE_NAME, null, valuesCharacter);
 
             return null;
         }
     }
-
-
-
-
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
