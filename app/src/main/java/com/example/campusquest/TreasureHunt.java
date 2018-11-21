@@ -236,7 +236,7 @@ public class TreasureHunt extends AppCompatActivity implements
         googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    /** Function called when a users location has changed */
+    /** Function called when a users location has changed updates map view and marker */
     public void onLocationChanged() {
 
         //removes google map marker if it exits
@@ -283,13 +283,18 @@ public class TreasureHunt extends AppCompatActivity implements
             mCurrentStage += 1;
             loadCurrentStage(); // loads text view data
             getLoaderManager().restartLoader(LOADER_CLUE, null, this);
+            new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
+                    .setTitleText("Sweet!")
+                    .setContentText("You found the next clue.")
+                    .setCustomImage(R.drawable.treasure_icon)
+                    .show();
         } else {
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
             new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
                     .setTitleText("Good job!")
-                    .setContentText("You completed the Quest!")
+                    .setContentText("You found the Treasure!")
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {

@@ -123,8 +123,11 @@ public class Stats extends AppCompatActivity implements
             }
 
             final int finalStepTotal = stepTotal;
-            final float finalCaloriesTotal = caloriesTotal;
-            final float finalDistanceTotal = distanceTotal;
+            final int finalCaloriesTotal = (int)caloriesTotal;
+            final int finalDistanceTotal = (int)distanceTotal;
+
+            TAG = "Debug";
+            Log.e(TAG, ""+finalStepTotal+" "+finalCaloriesTotal+" "+finalDistanceTotal);
 
             //Chnange UI components on this thread
             runOnUiThread(new Runnable() {

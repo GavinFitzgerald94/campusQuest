@@ -66,7 +66,7 @@
                 android:layout_width="54dp"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/stepsToday"
-                android:fontFamily="@font/getho_bold"
+
                 android:text=" 0"
                 android:textSize="24sp" />
         </RelativeLayout>
@@ -90,16 +90,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/calories_icon"
-                android:fontFamily="@font/getho_bold"
+
                 android:text="  Calories"
                 android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/numberOfCaloriesBurned"
-                android:layout_width="34dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/CaloriesBurnedToday"
-                android:fontFamily="@font/getho_bold"
+
                 android:text=" 0"
                 android:textSize="24sp" />
         </RelativeLayout>
