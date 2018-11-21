@@ -20,16 +20,12 @@ public class DatabaseDataWorker {
     }
 
     public void insertClues() {
-        insertClue("CL01", "QU01", "There's a lady who's sure...(O Reilly)", 53.308400f, -6.221913f, 1);
-        insertClue("CL02", "QU01", "All that glitters is gold...(registry) ", 53.306741f, -6.221380f, 2);
-        insertClue("CL03", "QU01", "And she's buying a stairway to heaven.(language centre)", 53.306220f, -6.220468f, 3);
-        insertClue("CL04", "QU01", "When she get's there she knows...(little path James J", 53.305928f, -6.224306f, 4);
-        insertClue("CL05", "QU01", "If the stores are all closed...(Sci West)", 53.308320f, -6.225765f, 5);
+        insertClue("CL01", "QU01", "Go here to celebrate the end of days.", 53.308400f, -6.221913f, 1);
+        insertClue("CL02", "QU01", "UCD's sorting hat.", 53.306741f, -6.221380f, 2);
+        insertClue("CL03", "QU01", "A modern day tower of babel.", 53.306220f, -6.220468f, 3);
+        insertClue("CL04", "QU01", "Tucked away on a little path behind... Alexandria was famous for having one of these, ", 53.305928f, -6.224306f, 4);
+        insertClue("CL05", "QU01", "West of dinosaur bones", 53.308320f, -6.225765f, 5);
     }
-
-//    public void insertUserQuestInfo() {
-//        insertUserQuestInfo("testName", "QU01", 3, 0, "");
-//    }
 
     public void insertUser(String username, String password, String university, int age,
                             double weight, String phone) {
