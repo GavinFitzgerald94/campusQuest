@@ -116,6 +116,10 @@ public class DrawerUtil {
                                 break;
                             case LEADERBOARD:
                                 //Action on click here
+                                if (!(activity instanceof LeaderboardActivity)) {
+                                    Intent intent = new Intent(activity, LeaderboardActivity.class);
+                                    view.getContext().startActivity(intent);
+                                }
                                 break;
                             case FRIENDS:
                                 //Action on click here

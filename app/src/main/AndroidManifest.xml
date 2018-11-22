@@ -5,6 +5,8 @@
     //Make so these permissions are required to run app
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     //Put in sensor requirements here.
     <application
         android:allowBackup="true"
@@ -45,6 +47,10 @@
             android:name=".CharacterSheet"
             android:label="@string/title_activity_character_sheet"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".ContactActivity"
+            android:label="Contact List"></activity>
+        <activity android:name=".LeaderboardActivity"
+            android:label="Leaderboard"></activity>
     </application>
 
 </manifest>
