@@ -127,7 +127,10 @@ public class DrawerUtil {
                                 }
                                 break;
                             case ABOUT:
-                                //Action on click here
+                                if (!(activity instanceof About)) {
+                                    Intent intent = new Intent(activity, About.class);
+                                    view.getContext().startActivity(intent);
+                                }
                                 break;
                             case LOGOUT:
                                 navigateToLogin(activity);
