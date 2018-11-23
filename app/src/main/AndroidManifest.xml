@@ -40,11 +40,12 @@
         <activity
             android:name=".TreasureHuntHome"
             android:label="@string/title_activity_treasure_hunt_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CharacterSheet"
             android:label="@string/title_activity_character_sheet"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".About"></activity>
     </application>
 
 </manifest>

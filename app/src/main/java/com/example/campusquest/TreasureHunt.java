@@ -291,9 +291,10 @@ public class TreasureHunt extends AppCompatActivity implements
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+            new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                     .setTitleText("Good job!")
                     .setContentText("You found the Treasure!")
+                    .setCustomImage(R.drawable.treasure)
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
