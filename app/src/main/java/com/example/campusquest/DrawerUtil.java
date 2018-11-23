@@ -49,7 +49,6 @@ public class DrawerUtil {
         // Create account header - header item of nav drawer.
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(activity)
-                .withHeaderBackground(R.drawable.ucd)
                 .addProfiles(
                         new ProfileDrawerItem().withName(DataManager.getInstance().getCurrentUserName()).withEmail("useremail@gmail.com").withIcon(R.drawable.avatar_lara)
                 )

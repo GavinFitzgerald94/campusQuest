@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F06292 </color>
-    <color name="colorPrimaryDark">#C2185B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#1e88e5 </color>
+    <color name="colorPrimaryDark">#005cb2</color>
+    <color name="colorAccent">#6ab7ff</color>
     <color name="white">#FFFFFF</color>
-    <color name="color_FA5864">#FA5864</color>
-    <color name="colorDarkBackground">#263238</color>
+    <color name="colorDark">#899094</color>
     <color name="blue">#525b91</color>
     <color name="indigo">#3a469d</color>
-    <color name="babypink">#F5C3C2</color>
-    <color name="traffy">#F987C5</color>
-    <color name="rosepink">#FF66CC</color>
-    //cardColors
+    <color name="colorSecondaryLightColor">#bdf478</color>
+    <color name="colorSecondary">#8ac148</color>
+    <color name="colorSecondaryDarkColor">#599014</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#000000</color>
+    <!--Card colors-->
     <color name="viewBg">#f1f5f8</color>
     <color name="album_title">#4c4c4c</color>
-
-    <color name="drawer_background">#303133</color>
-    <color name="drawer_text">#e4e7ef</color>
+    <!--Drawer colors-->
+    <color name="drawer_background">@color/colorPrimaryDark</color>
+    <color name="drawer_text">@color/secondaryTextColor</color>
 </resources>

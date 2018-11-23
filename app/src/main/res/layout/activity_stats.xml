@@ -42,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="80sp"
             android:layout_gravity="center"
-            android:background="@color/babypink"
+            android:background="@color/colorSecondaryLightColor"
             android:layout_weight="0.333"
             android:gravity="center">
 
@@ -75,7 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="80sp"
             android:layout_gravity="center"
-            android:background="@color/traffy"
+            android:background="@color/colorSecondary"
             android:layout_weight="0.333"
             android:gravity="center">
 
@@ -109,7 +109,7 @@
             android:layout_height="80sp"
             android:layout_gravity="center"
             android:layout_weight="0.333"
-            android:background="@color/rosepink"
+            android:background="@color/colorSecondaryDarkColor"
             android:gravity="center">
 
             <ImageView
