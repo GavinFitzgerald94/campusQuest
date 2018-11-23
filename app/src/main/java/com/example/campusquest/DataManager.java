@@ -28,7 +28,7 @@ public class DataManager {
     }
 
     public String getCurrentUserName() {
-        return "DataManagerTestName";
+        return "Tess McTestalot";
     }
 
     public List<QuestInfo> getQuests() {

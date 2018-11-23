@@ -141,13 +141,6 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         startActivity(intent);
     }
 
-    /**
-     * Navigate to the Stats page
-     **/
-    public void navigateToStats(View view) {
-        Intent intent = new Intent(this, Stats.class);
-        startActivity(intent);
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
