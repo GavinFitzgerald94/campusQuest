@@ -17,5 +17,5 @@
     <color name="album_title">#4c4c4c</color>
     <!--Drawer colors-->
     <color name="drawer_background">@color/colorPrimaryDark</color>
-    <color name="drawer_text">@color/secondaryTextColor</color>
+    <color name="drawer_text">@color/white</color>
 </resources>

@@ -30,7 +30,7 @@ public class DrawerUtil {
     // Set constants for use in drawer item selection.
     public static final int HOME = 3;
     public static final int LEADERBOARD = 4;
-    public static final int FRIENDS = 5;
+    public static final int GOOGLE_STATS = 5;
     public static final int STATS = 6;
     public static final int LOGOUT = 8;
     public static final int ABOUT = 7;
@@ -69,14 +69,14 @@ public class DrawerUtil {
         SecondaryDrawerItem drawerItemLeaderboard = new SecondaryDrawerItem().withIdentifier(LEADERBOARD)
                 .withName(R.string.nav_leaderboard).withIcon(R.drawable.ic_leader_board)
                 .withTextColor(activity.getResources().getColor(R.color.drawer_text));
-        SecondaryDrawerItem drawerItemFriends = new SecondaryDrawerItem().withIdentifier(FRIENDS)
-                .withName(R.string.nav_friends).withIcon(R.drawable.ic_friends)
+        SecondaryDrawerItem drawerItemGoogleStats= new SecondaryDrawerItem().withIdentifier(GOOGLE_STATS)
+                .withName(R.string.nav_google_stats).withIcon(R.drawable.ic_stats)
                 .withTextColor(activity.getResources().getColor(R.color.drawer_text));
         SecondaryDrawerItem drawerItemStats = new SecondaryDrawerItem().withIdentifier(STATS)
-                .withName(R.string.nav_stats).withIcon(R.drawable.ic_stats)
+                .withName(R.string.nav_stats).withIcon(R.drawable.ic_character)
                 .withTextColor(activity.getResources().getColor(R.color.drawer_text));
         SecondaryDrawerItem drawerItemAbout = new SecondaryDrawerItem().withIdentifier(ABOUT)
-                .withName(R.string.nav_about).withIcon(R.drawable.ic_stats)
+                .withName(R.string.nav_about).withIcon(R.drawable.ic_about)
                 .withTextColor(activity.getResources().getColor(R.color.drawer_text));
 
         PrimaryDrawerItem drawerItemLogout = new PrimaryDrawerItem().withIdentifier(LOGOUT)
@@ -97,7 +97,7 @@ public class DrawerUtil {
                         new DividerDrawerItem(),
                         drawerItemHome,
                         drawerItemLeaderboard,
-                        drawerItemFriends,
+                        drawerItemGoogleStats,
                         drawerItemStats,
                         drawerItemAbout,
                         new DividerDrawerItem(),
@@ -116,8 +116,11 @@ public class DrawerUtil {
                             case LEADERBOARD:
                                 //Action on click here
                                 break;
-                            case FRIENDS:
-                                //Action on click here
+                            case GOOGLE_STATS:
+                                if (!(activity instanceof Stats)) {
+                                    Intent intent = new Intent(activity, Stats.class);
+                                    view.getContext().startActivity(intent);
+                                }
                                 break;
                             case STATS:
                                 if (!(activity instanceof CharacterSheet)) {
