@@ -58,41 +58,13 @@
             android:id="@+id/avatar_lara"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_below="@+id/level_label"
-            android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="20dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="47dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="237dp"
             android:src="@drawable/avatar_lara" />
-
-        <TextView
-            android:id="@+id/level_label"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="234dp"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/quite_magical"
-            android:text="Level"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorAccent"
-            android:textSize="20sp"
-            tools:textAlignment="textStart" />
-
-        <TextView
-            android:id="@+id/level_value"
-            android:layout_width="122dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="237dp"
-            android:fontFamily="@font/quite_magical"
-            android:text="80"
-            android:textAlignment="textStart"
-            android:textColor="@color/colorAccent"
-            android:textSize="30sp"
-            tools:textAlignment="textStart" />
 
     </RelativeLayout>
 
