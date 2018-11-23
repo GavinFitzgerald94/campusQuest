@@ -15,6 +15,7 @@ import static com.example.campusquest.CampusQuestDatabaseContract.QuestsInfoEntr
 public class DataManager {
 
     private static DataManager sInstance;
+    private static String sUsername;
     private List<QuestInfo> mQuests = new ArrayList<>();
 
     /** Use this static method to access instance to ensure only one instance is created and used.
@@ -27,8 +28,20 @@ public class DataManager {
         return sInstance;
     }
 
+    /** Retrieve current user name if available or pass back
+     * test name if in test mode.
+     */
     public String getCurrentUserName() {
-        return "Tess McTestalot";
+        if (sUsername != null) {
+            return sUsername;
+        } else {
+            return "Tess McTestalot";
+        }
+
+    }
+
+    public void setCurrentUserName(String name) {
+        sUsername = name;
     }
 
     public List<QuestInfo> getQuests() {

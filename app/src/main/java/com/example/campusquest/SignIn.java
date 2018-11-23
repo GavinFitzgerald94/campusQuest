@@ -1,15 +1,14 @@
 package com.example.campusquest;
 
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.database.sqlite.SQLiteDatabase;
 import android.widget.Toast;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -53,7 +52,8 @@ public class SignIn extends AppCompatActivity {
                     if (checkUser(user, pwd)) {
                         Intent intent = new Intent(SignIn.this, MainActivity.class);
                         Log.d(SignIn.ACTIVITY_TAG, "Check Successful!");
-                        intent.putExtra("username", user);
+                        DataManager.getInstance().setCurrentUserName(user);
+                        //intent.putExtra("username", user);
                         // Starting Home Page
                         startActivity(intent);
                     } else {
