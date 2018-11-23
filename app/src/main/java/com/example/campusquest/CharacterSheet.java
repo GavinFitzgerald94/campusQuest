@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
@@ -41,9 +42,8 @@ public class CharacterSheet extends AppCompatActivity implements
         LoaderManager.LoaderCallbacks<Cursor> {
     public static final int LOADER_STATS = 0;
     public static final int ATTRIBS = 3;
-    private List<String> mAttributes;
-    private Spinner mSpinnerAttributes;
-    private String mSelectecAttribute;
+    private Spinner mSpinner;
+    private String mSelected;
     private Drawer drawer;
     private CampusQuestOpenHelper mDbOpenHelper;
     private int mLevel;
@@ -62,15 +62,16 @@ public class CharacterSheet extends AppCompatActivity implements
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        String[] arr =  {"Level", "Strength", "Endurance"};
-        mAttributes = Arrays.asList(arr);
-
         mDbOpenHelper = new CampusQuestOpenHelper(this);
         getLoaderManager().initLoader(LOADER_STATS,null, this);
 
-        mSpinnerAttributes = findViewById(R.id.spinner_attributes);
+        mSpinner= findViewById(R.id.spinner);
         buildSpinner();
-        mSpinnerAttributes.setOnItemSelectedListener(this);
+        mSpinner.setOnItemSelectedListener(this);
+
+        // Set current user name
+        TextView name = findViewById(R.id.username_label);
+        name.setText(getCurrentUser());
 
         drawer = DrawerUtil.getDrawer(this,toolbar);
 
@@ -168,7 +169,7 @@ public class CharacterSheet extends AppCompatActivity implements
 
         // Create radar data object to add to chart
         RadarData data = new RadarData(set);
-        data.setValueTextSize(9f);
+        data.setValueTextSize(10f);
         data.setDrawValues(true);
         data.setValueTextColor(Color.WHITE);
 
@@ -177,14 +178,15 @@ public class CharacterSheet extends AppCompatActivity implements
     }
 
     private void buildSpinner() {
-        ArrayAdapter adapterQuests = new ArrayAdapter(this, android.R.layout.simple_spinner_item, mAttributes);
-        adapterQuests.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mSpinnerAttributes.setAdapter(adapterQuests);
+        List<String> races = Arrays.asList("Human", "Orc", "Cyborg", "High elf");
+        ArrayAdapter adapter= new ArrayAdapter(this, R.layout.spinner_item, races);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mSpinner.setAdapter(adapter);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mSelectecAttribute = (String) parent.getItemAtPosition(position);
+        mSelected = (String) parent.getItemAtPosition(position);
     }
 
     @Override
@@ -220,8 +222,8 @@ public class CharacterSheet extends AppCompatActivity implements
             public Cursor loadInBackground() {
                 SQLiteDatabase db = mDbOpenHelper.getReadableDatabase();
 
-                //String name = getCurrentUser();
-                String name = "testname"; // retrieve test data
+                String name = getCurrentUser();
+                //String name = "testname"; // retrieve test data
                 String selection = UserCharacterInfoEntry.COLUMN_USERNAME+ " = ?";
                 String[] selectionArgs = {name};
 
@@ -265,9 +267,7 @@ public class CharacterSheet extends AppCompatActivity implements
 
             // Display stats on graph.
             setRadarData();
-
         }
-
     }
 
     @Override
