@@ -116,6 +116,8 @@ public class CharacterSheet extends AppCompatActivity implements
         // Disable chart legend
         mChart.getLegend().setEnabled(false);
 
+        setRadarData();
+
     }
 
     @Override
