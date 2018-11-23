@@ -180,7 +180,7 @@ public class CharacterSheet extends AppCompatActivity implements
     }
 
     private void buildSpinner() {
-        List<String> races = Arrays.asList("Human", "Orc", "Cyborg", "High elf");
+        List<String> races = Arrays.asList("Gunslinger", "Elf", "Ninja", "Wizard");
         ArrayAdapter adapter= new ArrayAdapter(this, R.layout.spinner_item, races);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);

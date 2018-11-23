@@ -50,7 +50,7 @@ public class DrawerUtil {
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(DataManager.getInstance().getCurrentUserName()).withEmail("useremail@gmail.com").withIcon(R.drawable.avatar_lara)
+                        new ProfileDrawerItem().withName(DataManager.getInstance().getCurrentUserName()).withEmail("useremail@gmail.com").withIcon(R.drawable.gunslinger)
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override

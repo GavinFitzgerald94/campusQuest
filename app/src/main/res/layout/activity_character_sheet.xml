@@ -48,25 +48,21 @@
             android:textAlignment="gravity" />
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/avatar_lara"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="47dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="237dp"
-            android:src="@drawable/avatar_lara" />
+            android:layout_gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:src="@drawable/gunslinger" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
             android:layout_width="match_parent"
