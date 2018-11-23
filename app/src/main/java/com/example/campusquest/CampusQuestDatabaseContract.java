@@ -102,5 +102,4 @@ public final class CampusQuestDatabaseContract {
                         COLUMN_COMPLETION_DATE + " DEFAULT CURRENT_TIMESTAMP)";
     }
 
-
 }

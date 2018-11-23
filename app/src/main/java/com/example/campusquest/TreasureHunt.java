@@ -61,8 +61,6 @@ import com.google.android.gms.tasks.Task;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//import cn.pedant.SweetAlert.SweetAlertDialog;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.*;
@@ -611,6 +609,7 @@ public class TreasureHunt extends AppCompatActivity implements
             valuesQuest.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
             valuesQuest.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
             valuesQuest.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            valuesCharacter.put(UserCharacterInfoEntry.COLUMN_USERNAME, getCurrentUser());
             // Check if quest is completed.
             if (mCurrentStage == mTotalStage) {
                 valuesQuest.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);

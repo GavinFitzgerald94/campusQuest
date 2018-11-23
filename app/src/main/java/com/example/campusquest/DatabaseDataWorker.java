@@ -27,6 +27,12 @@ public class DatabaseDataWorker {
         insertClue("CL05", "QU01", "West of dinosaur bones", 53.308320f, -6.225765f, 5);
     }
 
+   public void insertTestStats(){
+       insertUserCharacterInfo("testname", 1, 1, 1, 1);
+   }
+
+
+
     public void insertUser(String username, String password, String university, int age,
                             double weight, String phone) {
         ContentValues values = new ContentValues();
@@ -76,6 +82,18 @@ public class DatabaseDataWorker {
         values.put(CampusQuestDatabaseContract.UserQuestsInfoEntry.COLUMN_COMPLETION_DATE, completionDate);
 
         long newRowId = mDb.insert(CampusQuestDatabaseContract.UserQuestsInfoEntry.TABLE_NAME, null, values);
+    }
+
+    private void insertUserCharacterInfo(String userName, int level, int intelligence, int str, int endurance) {
+        ContentValues values = new ContentValues();
+
+        values.put(CampusQuestDatabaseContract.UserCharacterInfoEntry.COLUMN_USERNAME, userName);
+        values.put(CampusQuestDatabaseContract.UserCharacterInfoEntry.COLUMN_LEVEL, level);
+        values.put(CampusQuestDatabaseContract.UserCharacterInfoEntry.COLUMN_INTELLIGENCE, intelligence);
+        values.put(CampusQuestDatabaseContract.UserCharacterInfoEntry.COLUMN_ENDURANCE, endurance);
+        values.put(CampusQuestDatabaseContract.UserCharacterInfoEntry.COLUMN_STRENGTH, str);
+
+        long newRowId = mDb.insert(CampusQuestDatabaseContract.UserCharacterInfoEntry.TABLE_NAME, null, values);
     }
 
 
