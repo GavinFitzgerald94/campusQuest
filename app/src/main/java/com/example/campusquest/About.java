@@ -3,16 +3,24 @@ package com.example.campusquest;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+
+import com.mikepenz.materialdrawer.Drawer;
 
 import mehdi.sakout.aboutpage.AboutPage;
 
 public class About extends AppCompatActivity {
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
+
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        drawer =  DrawerUtil.getDrawer(this,toolbar);
 
         //String description = "CHANGE";
         //.setDescription(description)
@@ -31,7 +39,15 @@ public class About extends AppCompatActivity {
                 .addInstagram("medyo80")
                 .create();
 
-        RelativeLayout aboutPageContainer = findViewById(R.id.About_relativelayout);
+        LinearLayout aboutPageContainer = findViewById(R.id.aboutpageLayout);
         aboutPageContainer.addView(aboutPage);
+    }
+
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen()) {
+            drawer.closeDrawer();
+        } else {
+            super.onBackPressed();
+        }
     }
 }
