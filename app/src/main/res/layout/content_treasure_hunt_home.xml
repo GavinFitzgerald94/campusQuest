@@ -36,16 +36,4 @@
         android:onClick="resumeGame"
         android:text="@string/resume_game" />
 
-    <Button
-        android:id="@+id/button_statistics"
-        android:background="@drawable/buttonstyle"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:fontFamily="@font/quite_magical"
-        android:textSize="30dp"
-        android:textColor="@color/colorAccent"
-        android:layout_marginHorizontal="40dp"
-        android:layout_marginVertical="8dp"
-        android:onClick="navigateToStats"
-        android:text="@string/statistics" />
 </LinearLayout>

@@ -82,7 +82,7 @@ public class SignUp extends AppCompatActivity {
                                         @Override
                                         public void onClick(SweetAlertDialog sDialog) {
                                             // Add cilck event listener to the button
-                                            Intent intent = new Intent(SignUp.this, MainActivity.class);
+                                            Intent intent = new Intent(SignUp.this, SignIn.class);
                                             // Starting SignIn Activity
                                             startActivity(intent);
                                         }
@@ -99,12 +99,6 @@ public class SignUp extends AppCompatActivity {
                     sweetAlert("Oops","Please input username \n or password!", SweetAlertDialog.ERROR_TYPE);
             }
         });
-
-
     }
-
-
-
-
 
 }

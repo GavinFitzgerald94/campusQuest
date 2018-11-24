@@ -24,7 +24,7 @@
     <string name="title_activity_character_sheet">Character Info</string>
     <string name="nav_home">Quest Hub</string>
     <string name="nav_leaderboard">Leaderboard</string>
-    <string name="nav_friends">Companions</string>
+    <string name="nav_google_stats">Fit Stats</string>
     <string name="nav_stats">Character Info</string>
     <string name="nav_sign_out">Exit CampusQuest</string>
     <string name="nav_about">About</string>
