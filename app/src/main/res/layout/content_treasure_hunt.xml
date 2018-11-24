@@ -93,8 +93,6 @@
                 android:text="Clue" />
         </android.support.v7.widget.CardView>
 
-
-
         <Button
             android:id="@+id/fakeClueFound"
             android:layout_width="match_parent"
@@ -105,5 +103,4 @@
             android:onClick="fakeFindClueLocation"
             android:text="Fake Find Location" />
     </LinearLayout>
-
 </LinearLayout>
