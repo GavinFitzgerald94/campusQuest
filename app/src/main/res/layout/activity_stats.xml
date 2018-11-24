@@ -1,140 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Stats"
-    android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_weight="1.0"
-        android:id="@+id/up"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <ImageView
-            android:id="@+id/run_icon"
-            android:layout_width="230dp"
-            android:layout_height="230dp"
-            android:layout_marginLeft="-50dp"
-            android:alpha="0.3"
-            android:layout_gravity="center"
-            android:src="@drawable/run_icon"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Your stats"
-            android:fontFamily="@font/getho_bold"
-            android:textSize="30sp"
-            android:layout_toRightOf="@+id/run_icon"/>
-    </RelativeLayout>
-
-    <LinearLayout
+    android:id="@+id/drawer_layout_stats"
+    android:fitsSystemWindows="true">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_weight="1.0"
+        android:layout_height="match_parent"
+        tools:context=".Stats"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_stats"
             android:layout_width="match_parent"
-            android:layout_height="80sp"
-            android:layout_gravity="center"
-            android:background="@color/colorSecondaryLightColor"
-            android:layout_weight="0.333"
-            android:gravity="center">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
 
-            <ImageView
-                android:id="@+id/steps_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/steps_icon" />
-
-            <TextView
-                android:id="@+id/stepsToday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/steps_icon"
-                android:fontFamily="@font/getho_bold"
-                android:text="  Steps"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/numberOfSteps"
-                android:layout_width="54dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/stepsToday"
-
-                android:text=" 0"
-                android:textSize="24sp" />
-        </RelativeLayout>
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            android:elevation="4dp" />
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="80sp"
-            android:layout_gravity="center"
-            android:background="@color/colorSecondary"
-            android:layout_weight="0.333"
-            android:gravity="center">
-
+            android:layout_weight="1.0"
+            android:id="@+id/up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
             <ImageView
-                android:id="@+id/calories_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/calories_icon" />
-
+                android:id="@+id/run_icon"
+                android:layout_width="230dp"
+                android:layout_height="230dp"
+                android:layout_marginLeft="-50dp"
+                android:alpha="0.3"
+                android:layout_gravity="center"
+                android:src="@drawable/run_icon"/>
             <TextView
-                android:id="@+id/CaloriesBurnedToday"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/calories_icon"
-
-                android:text="  Calories"
-                android:textSize="24sp" />
-
-            <TextView
-                android:id="@+id/numberOfCaloriesBurned"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/CaloriesBurnedToday"
-
-                android:text=" 0"
-                android:textSize="24sp" />
+                android:layout_centerVertical="true"
+                android:text="Your stats"
+                android:fontFamily="@font/getho_bold"
+                android:textSize="30sp"
+                android:layout_toRightOf="@+id/run_icon"/>
         </RelativeLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="80sp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="0.333"
-            android:background="@color/colorSecondaryDarkColor"
-            android:gravity="center">
+            android:layout_weight="1.0"
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/distance_icon"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:src="@drawable/distance_icon" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="80sp"
+                android:layout_gravity="center"
+                android:background="@color/colorSecondaryLightColor"
+                android:layout_weight="0.333"
+                android:gravity="center">
 
-            <TextView
-                android:id="@+id/DistanceTraveledToday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/distance_icon"
-                android:fontFamily="@font/getho_bold"
-                android:text="  Distance"
-                android:textSize="24sp" />
+                <ImageView
+                    android:id="@+id/steps_icon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/steps_icon" />
 
-            <TextView
-                android:id="@+id/distanceTraveledNumber"
-                android:layout_width="29dp"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/DistanceTraveledToday"
-                android:fontFamily="@font/getho_bold"
-                android:text=" 0"
-                android:textSize="24sp" />
-        </RelativeLayout>
+                <TextView
+                    android:id="@+id/stepsToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/steps_icon"
+                    android:fontFamily="@font/getho_bold"
+                    android:text="  Steps"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/numberOfSteps"
+                    android:layout_width="54dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/stepsToday"
+
+                    android:text=" 0"
+                    android:textSize="24sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="80sp"
+                android:layout_gravity="center"
+                android:background="@color/colorSecondary"
+                android:layout_weight="0.333"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/calories_icon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/calories_icon" />
+
+                <TextView
+                    android:id="@+id/CaloriesBurnedToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/calories_icon"
+
+                    android:text="  Calories"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/numberOfCaloriesBurned"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/CaloriesBurnedToday"
+
+                    android:text=" 0"
+                    android:textSize="24sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="80sp"
+                android:layout_gravity="center"
+                android:layout_weight="0.333"
+                android:background="@color/colorSecondaryDarkColor"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/distance_icon"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/distance_icon" />
+
+                <TextView
+                    android:id="@+id/DistanceTraveledToday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/distance_icon"
+                    android:fontFamily="@font/getho_bold"
+                    android:text="  Distance"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/distanceTraveledNumber"
+                    android:layout_width="29dp"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/DistanceTraveledToday"
+                    android:fontFamily="@font/getho_bold"
+                    android:text=" 0"
+                    android:textSize="24sp" />
+            </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>

@@ -390,8 +390,6 @@ public class TreasureHunt extends AppCompatActivity implements
 
     /** Sets quest name and total number of stages in quest */
     private void loadViewContent() {
-        TextView questValue = findViewById(R.id.questName);
-        questValue.setText(mQuestName);
         TextView totalStageValue = findViewById(R.id.totalStageValue);
         totalStageValue.setText(String.valueOf("Number of Stages: "+mTotalStage));
         loadCurrentStage();

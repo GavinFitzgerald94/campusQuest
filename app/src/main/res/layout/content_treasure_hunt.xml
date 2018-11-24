@@ -25,14 +25,6 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/questName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Quest Name:" />
-
-        <TextView
             android:id="@+id/totalStageValue"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

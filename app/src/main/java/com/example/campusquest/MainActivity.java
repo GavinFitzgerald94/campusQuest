@@ -50,25 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         /** API taken from "cardslib" library by Gabriele Mariotti can be found at - https://github.com/gabrielemariotti/cardslib */
-//        Array to hold extra actions to be put at end of card "Play" for example.
-//        ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
-//        // Set supplemental actions ("Play" etc.)
-//        TextSupplementalAction t1 = new TextSupplementalAction(this, R.id.text1);
-//        t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
-//            @Override
-//            public void onClick(Card card, View view) {
-//                String cardId = "QU01";
-//                QuestInfo quest = null;
-//                for (QuestInfo i : mQuests){
-//                    if (i.getQuestId().equals(cardId)){
-//                        quest = i;
-//                    }
-//                }
-//                navigateTreasureHuntHome(quest);
-//            }
-//        });
-//        actions.add(t1);
-
         //Initialize card object
         MaterialLargeImageCard card =
                 MaterialLargeImageCard.with(this)
