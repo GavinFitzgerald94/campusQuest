@@ -140,8 +140,8 @@ public class ContactActivity extends AppCompatActivity {
     }
 
     private void sendMail(String[] recipients){
-        String message = "Join me With the Campus quest. Have fun!";
-        String subject = "Invention";
+        String message = "Hi! Come play CampusQuest with me!";
+        String subject = "Invitation";
 
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_EMAIL,recipients);

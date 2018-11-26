@@ -6,15 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.view.View.OnClickListener;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
     Context c;
@@ -104,7 +99,4 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         Log.d(TAG, "getItemCount: "+ dataset.length );
         return dataset.length;
     }
-
-
-
 }
