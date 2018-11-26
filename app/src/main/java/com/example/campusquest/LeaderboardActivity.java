@@ -92,7 +92,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void initUsers(JSONObject json){
-        int[] image =new int[] {R.drawable.dog_pic,R.drawable.cat_pic,R.drawable.pig_pic,R.drawable.owl_pic};
+        int[] image ={ R.drawable.rank_1,R.drawable.rank_2,R.drawable.rank_3 };
         try {
             JSONArray users = json.getJSONArray("content");
             for(int i =0; i< users.length();i++){

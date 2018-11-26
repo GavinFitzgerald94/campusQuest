@@ -1,28 +1,32 @@
 package com.example.campusquest;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactActivity extends AppCompatActivity implements ContactAdapter.ContactItemClickListener {
+public class ContactActivity extends AppCompatActivity {
 
     private ContactAdapter mAdapter;
     private RecyclerView mContactList;
-    private Toast mToast;
     private List<Contact> dataset = new ArrayList<>();
+    StringBuilder sb=null;
     private static final int REQUEST_RUNTIME_PERMISSION = 123;
+
     String[] permissons = {Manifest.permission.READ_CONTACTS,
             Manifest.permission.WRITE_CONTACTS,
             Manifest.permission.READ_CONTACTS,
@@ -31,14 +35,10 @@ public class ContactActivity extends AppCompatActivity implements ContactAdapter
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.contact_activity);
-
         mContactList = findViewById(R.id.my_recycler_view);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-
         mContactList.setLayoutManager(layoutManager);
         mContactList.setHasFixedSize(true);
 
@@ -64,20 +64,45 @@ public class ContactActivity extends AppCompatActivity implements ContactAdapter
             Log.d("Contact", "onCreate: Get the contacts");
             getContacts();
             Log.d("err", "onCreate: "+ dataset);
-            mAdapter = new ContactAdapter(dataset, this);
+
+            Contact[] contactArray = new Contact[dataset.size()];
+            for(int i =0; i< dataset.size(); i++){
+                contactArray[i] = dataset.get(i);
+            }
+            mAdapter = new ContactAdapter(this, contactArray);
             mContactList.setAdapter(mAdapter);
+            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    sb =new StringBuilder();
+                    int i=0;
+                    String[] recipients = new String[mAdapter.checkedContact.size()];
+                    do {
+                        Contact contact= mAdapter.checkedContact.get(i);
+                        recipients[i] = contact.getEmail();
+                        Log.d("recipients", "onClick: email" + recipients[i]);
+                        sb.append(contact.getName());
+                        if(i != mAdapter.checkedContact.size()-1){
+                            sb.append("\n");
+                        }
+                        i++;
+                    }while (i < mAdapter.checkedContact.size());
+
+                    if(mAdapter.checkedContact.size()>0)
+                    {
+
+                        Toast.makeText(ContactActivity.this,sb.toString(),Toast.LENGTH_SHORT).show();
+                        sendMail(recipients);
+                    }else
+                    {
+                        Toast.makeText(ContactActivity.this,"Please Check An Item First", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 
-    @Override
-    public void onListItemClick(int clickedItemIndex) {
-        if (mToast != null) {
-            mToast.cancel();
-        }
-        String toastMessage = "Item #" + clickedItemIndex + " clicked." + dataset.get(clickedItemIndex).getName();
-        mToast = Toast.makeText(this, toastMessage, Toast.LENGTH_LONG);
-        mToast.show();
-    }
 
     private void getContacts() {
         Contact contact;
@@ -112,5 +137,19 @@ public class ContactActivity extends AppCompatActivity implements ContactAdapter
                 }
             }
         }
+    }
+
+    private void sendMail(String[] recipients){
+        String message = "Join me With the Campus quest. Have fun!";
+        String subject = "Invention";
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_EMAIL,recipients);
+        intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+
+        intent.setType("message/rfc822");
+        startActivity(Intent.createChooser(intent, "Choose a Email"));
+
     }
 }

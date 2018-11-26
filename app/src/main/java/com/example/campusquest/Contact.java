@@ -2,6 +2,7 @@ package com.example.campusquest;
 
 public class Contact {
     private String name,number,email;
+    private boolean isSelected;
 
     public String getName() {
         return name;
@@ -25,5 +26,13 @@ public class Contact {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public boolean isSelected(){
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected){
+        isSelected = selected;
     }
 }
