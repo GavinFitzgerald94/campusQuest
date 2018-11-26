@@ -15,8 +15,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,12 +59,10 @@ import com.google.android.gms.tasks.Task;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-//import cn.pedant.SweetAlert.SweetAlertDialog;
-
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import static com.example.campusquest.CampusQuestDatabaseContract.*;
 import static com.example.campusquest.CampusQuestDatabaseContract.CluesInfoEntry;
+import static com.example.campusquest.CampusQuestDatabaseContract.UserCharacterInfoEntry;
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
 import static com.example.campusquest.DataManager.getInstance;
 
@@ -96,11 +92,10 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mClueText;
     private String mClueId;
 
-    private static final float distanceThreshold = 0.01f;
+    private static final float distanceThreshold = 10f;
     private OnDataPointListener mListener;
     private float mClueLat;
     private float mClueLong;
-    private float locationABSvalue;
     private GoogleApiClient mGoogleApiClient;
     private Cursor mClueCursor;
     SupportMapFragment mapFragment;
@@ -131,15 +126,6 @@ public class TreasureHunt extends AppCompatActivity implements
         mTotalStage = bundle.getInt("totalStage");
 
         loadViewContent();
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
 //        mButtonViewToday = (Button) findViewById(R.id.view_today);
 //        //Sets listener for onClick event
@@ -293,9 +279,10 @@ public class TreasureHunt extends AppCompatActivity implements
             String victory = "Quest Completed!";
             mClueText = victory;
             displayClue();
-            new SweetAlertDialog(this, SweetAlertDialog.SUCCESS_TYPE)
+            new SweetAlertDialog(this, SweetAlertDialog.CUSTOM_IMAGE_TYPE)
                     .setTitleText("Good job!")
                     .setContentText("You found the Treasure!")
+                    .setCustomImage(R.drawable.treasure)
                     .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                         @Override
                         public void onClick(SweetAlertDialog sDialog) {
@@ -391,8 +378,6 @@ public class TreasureHunt extends AppCompatActivity implements
 
     /** Sets quest name and total number of stages in quest */
     private void loadViewContent() {
-        TextView questValue = findViewById(R.id.questName);
-        questValue.setText(mQuestName);
         TextView totalStageValue = findViewById(R.id.totalStageValue);
         totalStageValue.setText(String.valueOf("Number of Stages: "+mTotalStage));
         loadCurrentStage();
@@ -611,6 +596,7 @@ public class TreasureHunt extends AppCompatActivity implements
             valuesQuest.put(UserQuestsInfoEntry.COLUMN_QUEST_ID, mQuestId);
             valuesQuest.put(UserQuestsInfoEntry.COLUMN_USERNAME, getCurrentUser());
             valuesQuest.put(UserQuestsInfoEntry.COLUMN_CURRENT_STAGE, mCurrentStage);
+            valuesCharacter.put(UserCharacterInfoEntry.COLUMN_USERNAME, getCurrentUser());
             // Check if quest is completed.
             if (mCurrentStage == mTotalStage) {
                 valuesQuest.put(UserQuestsInfoEntry.COLUMN_COMPLETED, QUEST_COMPLETED);
@@ -699,38 +685,37 @@ public class TreasureHunt extends AppCompatActivity implements
     }
 
     /**
-     * Checks the absolute difference between user location and clue location, if below threshold clueFound() is called
-     * */
+     * Checks the greater circle distance between two points on the earths surface, returns the distance between the two in meters
+     * @param lat1 The latitude of point 1
+     * @param lng1 The longitude of point 1
+     * @param lat2 The latitude of point 2
+     * @param lng2 The longitude of point 2
+     * @return dist The distance in meters between point 1 and point 2
+     */
+    public static float distFrom(float lat1, float lng1, float lat2, float lng2) {
+        double earthRadius = 6371000; //meters
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+        double a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(dLng/2) * Math.sin(dLng/2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        float dist = (float) (earthRadius * c);
+
+        return dist;
+    }
+
+    /**
+     * Checks the distance between user location and clue location, if below threshold clueFound() is called
+     */
     public void checkLocation() {
-        //**NEED TO CHANGE TO GREATER CIRCLE DISTANCE INSTEAD OF ABSOLUTE DIFFERENCE**
         String LOG = "Debug Location Check";
         Log.e(LOG, "mClueLat: "+mClueLat+" mClueLng: "+mClueLong);
         Log.e(LOG, "userLat: "+userLat+" userLng: "+userLng);
-        if(mClueLat < 0){
-            mClueLat *= -1;
-        }
-        if(mClueLong < 0){
-            mClueLong *= -1;
-        }
-        if(userLat < 0){
-            userLat *= -1;
-        }
-        if(userLng < 0){
-            userLng *= -1;
-        }
-        if (mClueLat > userLat && mClueLong > userLng) {
-             locationABSvalue = (mClueLat - userLat) + (mClueLong - userLng);
-        } else if(mClueLat < userLat && mClueLong < userLng){
-            locationABSvalue = ( userLat - mClueLat) + (userLng -mClueLong);
-        } else if (mClueLat > userLat && mClueLong < userLng){
-            locationABSvalue = (mClueLong - userLat) + (userLng -mClueLong);
-        }else if (mClueLat < userLat && mClueLong > userLng){
-            locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
-        }else if (mClueLat == userLat && mClueLong == userLng){
-            locationABSvalue = (userLat -mClueLat) + (mClueLong -userLng);
-        }
-        Log.e(LOG, "locationABSvalue: "+locationABSvalue+" distanceThreshold: "+distanceThreshold);
-        if(locationABSvalue < distanceThreshold){
+
+        float distance = distFrom(userLat, userLng, mClueLat, mClueLong);
+        Log.e(LOG, "distance: "+distance+" distanceThreshold: "+distanceThreshold);
+        if(distance < distanceThreshold){
             clueFound();
         }
     }

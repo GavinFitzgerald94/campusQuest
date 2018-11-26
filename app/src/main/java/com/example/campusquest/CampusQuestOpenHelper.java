@@ -20,11 +20,13 @@ public class CampusQuestOpenHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(CampusQuestDatabaseContract.QuestsInfoEntry.SQL_CREATE_TABLE);
         sqLiteDatabase.execSQL(CampusQuestDatabaseContract.UserQuestsInfoEntry.SQL_CREATE_TABLE);
         sqLiteDatabase.execSQL(CampusQuestDatabaseContract.CluesInfoEntry.SQL_CREATE_TABLE);
+        sqLiteDatabase.execSQL(CampusQuestDatabaseContract.UserCharacterInfoEntry.SQL_CREATE_TABLE);
 
         worker = new DatabaseDataWorker(sqLiteDatabase);
         worker.insertUsers();
         worker.insertQuests();
         worker.insertClues();
+        worker.insertTestStats();
         //worker.insertUserQuestInfo();
     }
 

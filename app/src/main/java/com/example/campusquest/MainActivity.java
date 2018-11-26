@@ -50,11 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         /** API taken from "cardslib" library by Gabriele Mariotti can be found at - https://github.com/gabrielemariotti/cardslib */
-        //Array to hold extra actions to be put at end of card "Play" for example.
-        ArrayList<BaseSupplementalAction> actions = new ArrayList<BaseSupplementalAction>();
-        // Set supplemental actions ("Play" etc.)
-        TextSupplementalAction t1 = new TextSupplementalAction(this, R.id.text1);
-        t1.setOnActionClickListener(new BaseSupplementalAction.OnActionClickListener() {
+        //Initialize card object
+        MaterialLargeImageCard card =
+                MaterialLargeImageCard.with(this)
+                        .useDrawableId(R.drawable.treasure_map)
+                        .setTitle("Treasure Hunt")
+                        .setSubTitle("Put your problem solving skills to the test as you try and decipher our cryptic messages, each clue represents a certain location on UCD campus follow all the clues to find the treasure! Good Luck...")
+//                        .setupSupplementalActions(R.layout.native_material_icon,actions )
+                        .build();
+
+        card.setOnClickListener(new Card.OnCardClickListener() {
             @Override
             public void onClick(Card card, View view) {
                 String cardId = "QU01";
@@ -67,36 +72,19 @@ public class MainActivity extends AppCompatActivity {
                 navigateTreasureHuntHome(quest);
             }
         });
-        actions.add(t1);
-
-        //Initialize card object
-        MaterialLargeImageCard card =
-                MaterialLargeImageCard.with(this)
-                        .useDrawableId(R.drawable.treasure_map)
-                        .setTitle("Treasure Hunt")
-                        .setSubTitle("Description of game goes here.")
-                        .setupSupplementalActions(R.layout.native_material_icon,actions )
-                        .build();
-
-        card.setOnClickListener(new Card.OnCardClickListener() {
-            @Override
-            public void onClick(Card card, View view) {
-                Toast.makeText(getApplicationContext()," Click on ActionArea ",Toast.LENGTH_SHORT).show();
-            }
-        });
 
         //Initialize card object
         MaterialLargeImageCard card2 =
                 MaterialLargeImageCard.with(this)
                         .useDrawableId(R.drawable.spy_chase)
                         .setTitle("Spy Chase")
-                        .setSubTitle("Description of game goes here.")
+                        .setSubTitle("Your are deep undercover working as a covert operative in UCD the intel you hold could help stop a major attack. But the enemy is on to you now RUN!!")
                         .build();
 
         card2.setOnClickListener(new Card.OnCardClickListener() {
             @Override
             public void onClick(Card card2, View view) {
-                Toast.makeText(getApplicationContext()," Click on ActionArea2 ",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext()," Game not implemented yet ",Toast.LENGTH_SHORT).show();
             }
         });
 

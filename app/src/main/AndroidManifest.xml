@@ -42,15 +42,16 @@
         <activity
             android:name=".TreasureHuntHome"
             android:label="@string/title_activity_treasure_hunt_home"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".CharacterSheet"
             android:label="@string/title_activity_character_sheet"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".ContactActivity"
-            android:label="Contact List"></activity>
+            android:label="Contact List"/>
         <activity android:name=".LeaderboardActivity"
-            android:label="Leaderboard"></activity>
+            android:label="Leaderboard"/>
+        <activity android:name=".About"/>
     </application>
 
 </manifest>

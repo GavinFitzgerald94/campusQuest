@@ -22,6 +22,7 @@ import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.result.DailyTotalResult;
+import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.concurrent.TimeUnit;
 
@@ -32,11 +33,16 @@ public class Stats extends AppCompatActivity implements
     private static final int GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 0x1001;
     public static String TAG = "";
     private GoogleApiClient mGoogleApiClient;
+    private Drawer drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stats);
+
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar_stats);
+        setSupportActionBar(toolbar);
+        drawer =  DrawerUtil.getDrawer(this,toolbar);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.HISTORY_API)
