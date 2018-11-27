@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,17 +25,24 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+
 public class LeaderboardActivity extends AppCompatActivity {
 
     private List<User> userList = new ArrayList<>();
     private UserAdapter adapter;
     private RecyclerView listView;
+    private Drawer drawer ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.leaderboard_activity);
         restAPI();
+
+        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = DrawerUtil.getDrawer(this,toolbar);
 
         FloatingActionButton fab = findViewById(R.id.contact_invitation);
         fab.setOnClickListener(new View.OnClickListener(){

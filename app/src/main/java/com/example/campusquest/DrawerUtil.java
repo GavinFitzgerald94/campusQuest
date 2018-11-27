@@ -25,6 +25,7 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 public class DrawerUtil {
 
+    public static final int INVITE_FRIEND = 2;
     public static Drawer drawer;
 
     // Set constants for use in drawer item selection.
@@ -79,6 +80,9 @@ public class DrawerUtil {
                 .withName(R.string.nav_about).withIcon(R.drawable.ic_about)
                 .withTextColor(activity.getResources().getColor(R.color.drawer_text));
 
+        PrimaryDrawerItem drawerItemInviteFriend = new PrimaryDrawerItem().withIdentifier(INVITE_FRIEND)
+                .withName(R.string.nav_invite_friend).withIcon(R.drawable.ic_friends)
+                .withTextColor(activity.getResources().getColor(R.color.drawer_text));
         PrimaryDrawerItem drawerItemLogout = new PrimaryDrawerItem().withIdentifier(LOGOUT)
                 .withName(R.string.nav_sign_out).withIcon(R.drawable.ic_sign_out)
                 .withTextColor(activity.getResources().getColor(R.color.drawer_text));
@@ -127,6 +131,12 @@ public class DrawerUtil {
                                 }
                                 break;
                             case STATS:
+                                if (!(activity instanceof CharacterSheet)) {
+                                    Intent intent = new Intent(activity, CharacterSheet.class);
+                                    view.getContext().startActivity(intent);
+                                }
+                                break;
+                            case INVITE_FRIEND:
                                 if (!(activity instanceof CharacterSheet)) {
                                     Intent intent = new Intent(activity, CharacterSheet.class);
                                     view.getContext().startActivity(intent);
