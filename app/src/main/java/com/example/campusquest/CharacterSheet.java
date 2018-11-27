@@ -88,7 +88,7 @@ public class CharacterSheet extends AppCompatActivity implements
 
         // Customise x axis
         XAxis xAxis = mChart.getXAxis();
-        xAxis.setTextSize(9f);
+        xAxis.setTextSize(20f);
         xAxis.setYOffset(0);
         xAxis.setXOffset(0);
         xAxis.setValueFormatter(new IAxisValueFormatter() {
@@ -107,7 +107,7 @@ public class CharacterSheet extends AppCompatActivity implements
         // Customise y axis
         YAxis yAxis  = mChart.getYAxis();
         yAxis.setLabelCount(ATTRIBS, false);
-        yAxis.setTextSize(9f);
+        yAxis.setTextSize(20f);
         // add to define max and min for y
 //        yAxis.setAxisMinimum();
 //        yAxis.setAxisMaximum();
