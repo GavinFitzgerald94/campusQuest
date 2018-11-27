@@ -105,6 +105,7 @@ public class DrawerUtil {
                         drawerItemStats,
                         drawerItemAbout,
                         new DividerDrawerItem(),
+                        drawerItemInviteFriend,
                         drawerItemLogout
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -137,8 +138,8 @@ public class DrawerUtil {
                                 }
                                 break;
                             case INVITE_FRIEND:
-                                if (!(activity instanceof CharacterSheet)) {
-                                    Intent intent = new Intent(activity, CharacterSheet.class);
+                                if (!(activity instanceof ContactActivity)) {
+                                    Intent intent = new Intent(activity, ContactActivity.class);
                                     view.getContext().startActivity(intent);
                                 }
                                 break;

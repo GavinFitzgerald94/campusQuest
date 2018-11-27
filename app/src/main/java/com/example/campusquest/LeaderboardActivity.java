@@ -1,13 +1,10 @@
 package com.example.campusquest;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import com.mikepenz.materialdrawer.Drawer;
 
@@ -43,16 +40,6 @@ public class LeaderboardActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         drawer = DrawerUtil.getDrawer(this,toolbar);
-
-        FloatingActionButton fab = findViewById(R.id.contact_invitation);
-        fab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-                Intent intent = new Intent(LeaderboardActivity.this, ContactActivity.class);
-                startActivity(intent);
-            }
-        });
-
 
     }
 

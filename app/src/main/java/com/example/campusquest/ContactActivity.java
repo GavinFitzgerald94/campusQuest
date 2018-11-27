@@ -26,6 +26,7 @@ public class ContactActivity extends AppCompatActivity {
     private List<Contact> dataset = new ArrayList<>();
     StringBuilder sb=null;
     private static final int REQUEST_RUNTIME_PERMISSION = 123;
+    private Toast toast;
 
     String[] permissons = {Manifest.permission.READ_CONTACTS,
             Manifest.permission.WRITE_CONTACTS,
@@ -136,6 +137,9 @@ public class ContactActivity extends AppCompatActivity {
                     dataset.add(contact);
                 }
             }
+        } else {
+            String err = "No contacts found.";
+            Toast.makeText(ContactActivity.this,err,Toast.LENGTH_SHORT).show();
         }
     }
 
