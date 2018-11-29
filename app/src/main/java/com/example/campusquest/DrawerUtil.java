@@ -26,6 +26,7 @@ import static android.support.v4.content.ContextCompat.startActivity;
 public class DrawerUtil {
 
     public static final int INVITE_FRIEND = 2;
+    public static final int PROFILE = 1;
     public static Drawer drawer;
 
     // Set constants for use in drawer item selection.
@@ -42,16 +43,20 @@ public class DrawerUtil {
      * Implements a listener method which responds to clicks on navigation items in drawer.
      *
      * @param activity
-     * @param toolbar
      */
 
-    public static Drawer getDrawer(final Activity activity, Toolbar toolbar) {
-
+    public static AccountHeader getHeader(final Activity activity) {
+        int picture = DataManager.getInstance().getCurrentProfilePic();//R.drawable.gunslinger;
         // Create account header - header item of nav drawer.
-        AccountHeader headerResult = new AccountHeaderBuilder()
+        AccountHeader header = new AccountHeaderBuilder()
                 .withActivity(activity)
                 .addProfiles(
-                        new ProfileDrawerItem().withName(DataManager.getInstance().getCurrentUserName()).withEmail("useremail@gmail.com").withIcon(R.drawable.gunslinger)
+                        new ProfileDrawerItem().withName(DataManager.getInstance()
+                                .getCurrentUserName())
+                                .withEmail("useremail@gmail.com")
+                                .withIcon(picture)
+                                .withIdentifier(PROFILE)
+
                 )
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
@@ -62,6 +67,13 @@ public class DrawerUtil {
                     }
                 })
                 .build();
+
+        return header;
+    }
+
+    public static Drawer getDrawer(final Activity activity, Toolbar toolbar) {
+
+        AccountHeader headerResult = getHeader(activity);
 
         // Create drawer items
         SecondaryDrawerItem drawerItemHome = new SecondaryDrawerItem().withIdentifier(HOME)

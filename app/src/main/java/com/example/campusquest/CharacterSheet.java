@@ -29,6 +29,7 @@ import com.github.mikephil.charting.data.RadarDataSet;
 import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IDataSet;
+import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.Drawer;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class CharacterSheet extends AppCompatActivity implements
     private Spinner mSpinner;
     private String mSelected;
     private Drawer drawer;
+    private AccountHeader header;
     private CampusQuestOpenHelper mDbOpenHelper;
     private int mLevel;
     private int mStrength;
@@ -53,6 +55,9 @@ public class CharacterSheet extends AppCompatActivity implements
     private int mIntelligence;
     private Cursor mStatsCursor;
     private RadarChart mChart;
+    private ImageView avatarImg;
+    private List<String> mRaces = Arrays.asList("Gunslinger", "Zelda", "Ninja", "Wizard");
+    private android.support.v7.widget.Toolbar mToolbar;
 
     /**
      * Loads page data including the radar chart used to display information about character attributes.
@@ -65,8 +70,8 @@ public class CharacterSheet extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_character_sheet);
 
-        android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        mToolbar= findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
 
         mDbOpenHelper = new CampusQuestOpenHelper(this);
         getLoaderManager().initLoader(LOADER_STATS, null, this);
@@ -74,12 +79,19 @@ public class CharacterSheet extends AppCompatActivity implements
         mSpinner = findViewById(R.id.spinner);
         buildSpinner();
         mSpinner.setOnItemSelectedListener(this);
+        setSpinnerSelection();
 
         // Set current user name
         TextView name = findViewById(R.id.username_label);
         name.setText(getCurrentUser());
 
-        drawer = DrawerUtil.getDrawer(this, toolbar);
+        // Set current user image for avatar
+        avatarImg = findViewById(R.id.avatar);
+        avatarImg.setImageResource(DataManager.getInstance().getCurrentProfilePic());
+
+        // Get drawer
+        drawer = DrawerUtil.getDrawer(this, mToolbar);
+        header = DrawerUtil.getHeader(this);
 
         // Create and configure radar chart for displaying stats.
         mChart = findViewById(R.id.stats_chart);
@@ -124,6 +136,21 @@ public class CharacterSheet extends AppCompatActivity implements
 
         setRadarData();
 
+    }
+
+    /**
+     * Determine which element to select from spinner based on previous selection
+     * Retrieves stored selection from Data Manager.
+     */
+
+    private void setSpinnerSelection() {
+        String name = DataManager.getInstance().getCurrentClass();
+
+        for (String race:mRaces) {
+            if (race.equals(name)) {
+                mSpinner.setSelection(mRaces.indexOf(race));
+            }
+        }
     }
 
     @Override
@@ -191,8 +218,7 @@ public class CharacterSheet extends AppCompatActivity implements
      */
 
     private void buildSpinner() {
-        List<String> races = Arrays.asList("Gunslinger", "Elf", "Ninja", "Wizard");
-        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, races);
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, mRaces);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
     }
@@ -208,24 +234,28 @@ public class CharacterSheet extends AppCompatActivity implements
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mSelected = (String) parent.getItemAtPosition(position);
-        ImageView img = findViewById(R.id.avatar);
+        DataManager.getInstance().setCurrentClass(mSelected);
         // Change avatar to selected item.
         switch (mSelected) {
             case "Gunslinger":
-                img.setImageResource(R.drawable.gunslinger);
+                avatarImg.setImageResource(R.drawable.gunslinger);
+                DataManager.getInstance().setCurrentProfilePic(R.drawable.gunslinger);
                 break;
-            case "Elf":
-                img.setImageResource(R.drawable.elf);
+            case "Zelda":
+                avatarImg.setImageResource(R.drawable.elf);
+                DataManager.getInstance().setCurrentProfilePic(R.drawable.elf);
                 break;
             case "Ninja":
-                img.setImageResource(R.drawable.ninja);
+                avatarImg.setImageResource(R.drawable.ninja);
+                DataManager.getInstance().setCurrentProfilePic(R.drawable.ninja);
                 break;
             case "Wizard":
-                img.setImageResource(R.drawable.wizard);
+                avatarImg.setImageResource(R.drawable.wizard);
+                DataManager.getInstance().setCurrentProfilePic(R.drawable.wizard);
                 break;
-            default:
-                img.setImageResource(R.drawable.gunslinger);
         }
+        //Recreate drawer to update player profile icon.
+        drawer = DrawerUtil.getDrawer(this, mToolbar);
     }
 
 
@@ -328,4 +358,5 @@ public class CharacterSheet extends AppCompatActivity implements
         DataManager data = getInstance();
         return data.getCurrentUserName();
     }
+
 }

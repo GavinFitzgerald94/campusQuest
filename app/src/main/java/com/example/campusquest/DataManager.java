@@ -18,6 +18,8 @@ public class DataManager {
     private static DataManager sInstance;
     private static String sUsername;
     private List<QuestInfo> mQuests = new ArrayList<>();
+    private int mPicId = R.drawable.gunslinger;
+    private String mClassName = "Gunslinger";
 
     /** Use this static method to access instance to ensure only one instance is created and used.
      */
@@ -39,6 +41,22 @@ public class DataManager {
             return "Tess McTestalot";
         }
 
+    }
+
+    public int getCurrentProfilePic() {
+        return mPicId;
+    }
+
+    public void setCurrentProfilePic(int newId) {
+        mPicId = newId;
+    }
+
+    public void setCurrentClass(String name ) {
+        mClassName = name;
+    }
+
+    public String getCurrentClass() {
+        return mClassName;
     }
 
     public void setCurrentUserName(String name) {
