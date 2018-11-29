@@ -3,6 +3,10 @@ package com.example.campusquest;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * Defines methods to insert data into the database.
+ */
+
 public class DatabaseDataWorker {
     private SQLiteDatabase mDb;
 

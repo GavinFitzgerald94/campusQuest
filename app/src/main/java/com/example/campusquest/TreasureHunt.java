@@ -1,5 +1,6 @@
 package com.example.campusquest;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.LoaderManager;
@@ -127,10 +128,6 @@ public class TreasureHunt extends AppCompatActivity implements
 
         loadViewContent();
 
-//        mButtonViewToday = (Button) findViewById(R.id.view_today);
-//        //Sets listener for onClick event
-//        mButtonViewToday.setOnClickListener(this);
-
         // Create a Google Fit Client instance.
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Fitness.SENSORS_API)
@@ -158,7 +155,7 @@ public class TreasureHunt extends AppCompatActivity implements
                     GoogleSignIn.getLastSignedInAccount(this),
                     fitnessOptions);
         } else {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1); //Checks if app can use fine location data as of marshmallow this is required at run-time
         }
 
     }
@@ -168,7 +165,7 @@ public class TreasureHunt extends AppCompatActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == GOOGLE_FIT_PERMISSIONS_REQUEST_CODE) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 1);//Checks if app can use fine location data as of marshmallow this is required at run-time
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);//Checks if app can use fine location data as of marshmallow this is required at run-time
             }
         }
 
@@ -202,6 +199,11 @@ public class TreasureHunt extends AppCompatActivity implements
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             String LOG = "Permissions Error";
             Log.e(TAG,"Do not have user permission for Fine or Coarse location");
+
+            // Request location from user if permission has not already been granted.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    1);
             return;
         }
 

@@ -1,15 +1,18 @@
 package com.example.campusquest;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.mikepenz.materialdrawer.Drawer;
 
 import mehdi.sakout.aboutpage.AboutPage;
 
+
+/**
+ * This class utilises an external library to create an About page with integrade social media functionality and scrolling.
+ */
 public class About extends AppCompatActivity {
     private Drawer drawer;
 

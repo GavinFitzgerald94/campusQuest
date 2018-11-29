@@ -1,13 +1,17 @@
 package com.example.campusquest;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -19,9 +23,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import static com.example.campusquest.CampusQuestDatabaseContract.UserQuestsInfoEntry;
 
-//import cn.pedant.SweetAlert.SweetAlertDialog;
 
-public class TreasureHuntHome extends AppCompatActivity implements  LoaderManager.LoaderCallbacks<Cursor>  {
+public class TreasureHuntHome extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     public static final int LOADER_PREV_GAME = 0;
     private CampusQuestOpenHelper mDbOpenHelper;
     private String mQuestName;
@@ -36,17 +39,27 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_treasure_hunt_home);
-        //QuestInfo questInfo = getIntent().getExtras().getParcelable("questInfo");
+        // Retrieves questInfo object from previous page.
+        QuestInfo questInfo = getIntent().getExtras().getParcelable("questInfo");
         mDbOpenHelper = new CampusQuestOpenHelper(this);
 
         android.support.v7.widget.Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        QuestInfo questInfo = new QuestInfo("QU01", "Treasure Hunt", 5);
 
         drawer = DrawerUtil.getDrawer(this, toolbar);
 
         initialiseQuestInfo(questInfo);
 
+        // Preload location permissions for Treasure Hunt page.
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission not granted. Request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        1);
+            }
     }
 
     @Override
@@ -59,7 +72,7 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
 
     private void initialiseQuestInfo(QuestInfo questInfo) {
         mQuestName = questInfo.getQuestName();
-        mTotalStage =  questInfo.getTotalStages();
+        mTotalStage = questInfo.getTotalStages();
         mQuestId = questInfo.getQuestId();
     }
 
@@ -98,9 +111,9 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
      * Check if there is a existing game, confirm with user they want to erase this previous game data and start a new game.
      **/
     public void resumeGamePopUp(View v) {
-        String LOG = "Degbug";
-        Log.e(LOG, "mCurrStage "+ mResumeButton.getVisibility());
-        if(mResumeButton.getVisibility() != View.VISIBLE){
+        String LOG = "Debug";
+        Log.e(LOG, "mCurrStage " + mResumeButton.getVisibility());
+        if (mResumeButton.getVisibility() != View.VISIBLE) {
             newGame(findViewById(R.id.button_resume_gamebutton));
         } else {
             //Sweet Alert Dialog
@@ -133,7 +146,7 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         int currStage = mPrevStage;
         Intent intent = new Intent(this, TreasureHunt.class);
         Bundle bundle = new Bundle();
-        bundle.putInt("currStage", currStage );
+        bundle.putInt("currStage", currStage);
         bundle.putInt("totalStage", mTotalStage);
         bundle.putString("questName", mQuestName);
         bundle.putString("questId", mQuestId);
@@ -150,6 +163,12 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
         return loader;
     }
 
+    /**
+     * Create a cursor loader for query to database to see if there
+     * are any recent games to resume.
+     *
+     * @return CursorLoader
+     */
     @SuppressLint("StaticFieldLeak")
     private CursorLoader createLoaderPrevGame() {
         return new CursorLoader(this) {
@@ -170,16 +189,22 @@ public class TreasureHuntHome extends AppCompatActivity implements  LoaderManage
                         UserQuestsInfoEntry.COLUMN_COMPLETED};
 
                 return db.query(UserQuestsInfoEntry.TABLE_NAME, lastQuestColumns,
-                        selection, selectionArgs, null, null,  UserQuestsInfoEntry.COLUMN_COMPLETION_DATE + " DESC");
+                        selection, selectionArgs, null, null, UserQuestsInfoEntry.COLUMN_COMPLETION_DATE + " DESC");
             }
         };
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(loader.getId()==LOADER_PREV_GAME)
+        if (loader.getId() == LOADER_PREV_GAME)
             loadPrevGameOption(data);
     }
+
+    /**
+     * Load most recent previous game if it is incompleted.
+     *
+     * @param data
+     */
 
     private void loadPrevGameOption(Cursor data) {
         Cursor lastQuestCursor = data;

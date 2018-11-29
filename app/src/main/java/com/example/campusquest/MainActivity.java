@@ -4,17 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.mikepenz.materialdrawer.Drawer;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import it.gmariotti.cardslib.library.cards.actions.BaseSupplementalAction;
-import it.gmariotti.cardslib.library.cards.actions.TextSupplementalAction;
 import it.gmariotti.cardslib.library.cards.material.MaterialLargeImageCard;
 import it.gmariotti.cardslib.library.internal.Card;
 import it.gmariotti.cardslib.library.view.CardViewNative;
@@ -78,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 MaterialLargeImageCard.with(this)
                         .useDrawableId(R.drawable.spy_chase)
                         .setTitle("Spy Chase")
-                        .setSubTitle("Your are deep undercover working as a covert operative in UCD the intel you hold could help stop a major attack. But the enemy is on to you now RUN!!")
+                        .setSubTitle("Your are deep undercover working as a covert operative in UCD the intel you hold could help stop a major attack. The enemy is on to you, now RUN!!")
                         .build();
 
         card2.setOnClickListener(new Card.OnCardClickListener() {
@@ -124,17 +120,6 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-//    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        mSelectedQuest = (QuestInfo) parent.getItemAtPosition(position);
-
-    }
-
-//    @Override
-    public void onNothingSelected(AdapterView<?> parent) {
-        // Do nothing - auto-generated stub.
-    }
-
     /**
      * Navigates to the treasure hunt home page.
      *
@@ -142,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
      **/
     private void navigateTreasureHuntHome(QuestInfo quest) {
         Intent intent = new Intent(this, TreasureHuntHome.class);
-        //intent.putExtra("questInfo", quest);
+        intent.putExtra("questInfo", quest);
         startActivity(intent);
     }
 

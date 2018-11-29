@@ -2,6 +2,13 @@ package com.example.campusquest;
 
 import android.provider.BaseColumns;
 
+/**
+ * This is a collection of static classes that define the SQLite database table
+ * creation code.
+ *
+ * Called during database creation.
+ */
+
 public final class CampusQuestDatabaseContract {
 
     private CampusQuestDatabaseContract() {

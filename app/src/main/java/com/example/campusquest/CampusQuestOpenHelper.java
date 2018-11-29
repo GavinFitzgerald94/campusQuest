@@ -4,6 +4,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
 
+/**
+ * Class which implements androids own sqlite management helper class.
+ * Checks if db exists and creates if it doesnt.
+ * Option to implement database updrade functionality.
+ */
+
 public class CampusQuestOpenHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "CampusQuest.db";

@@ -1,5 +1,9 @@
 package com.example.campusquest;
 
+/**
+ * A class to define a QuestInfo object, which parcels quest information for convenient passing
+ * between activites and classes.
+ */
 
 import android.os.Parcel;
 import android.os.Parcelable;

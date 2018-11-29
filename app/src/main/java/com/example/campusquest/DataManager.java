@@ -9,7 +9,8 @@ import java.util.List;
 import static com.example.campusquest.CampusQuestDatabaseContract.QuestsInfoEntry;
 
 /**
- * Singleton service for accessing and managing app data.
+ * Singleton service for accessing and managing app data that is moved around
+ * the application (e.g. username.)
  */
 
 public class DataManager {

@@ -53,7 +53,11 @@ public class CharacterSheet extends AppCompatActivity implements
     private Cursor mStatsCursor;
     private RadarChart mChart;
 
-
+    /**
+     * Loads page data including the radar chart used to display information about character attributes.
+     * The radar chart is taken from a library called MPCharting - example code available @ https://github.com/PhilJay/MPAndroidChart
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,6 +182,10 @@ public class CharacterSheet extends AppCompatActivity implements
         mChart.setData(data);
         mChart.invalidate();;
     }
+
+    /**
+     * Populates the spinner with data.
+     */
 
     private void buildSpinner() {
         List<String> races = Arrays.asList("Gunslinger", "Elf", "Ninja", "Wizard");
