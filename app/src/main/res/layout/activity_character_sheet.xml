@@ -55,7 +55,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/avatar_lara"
+            android:id="@+id/avatar"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"

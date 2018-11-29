@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -56,6 +57,7 @@ public class CharacterSheet extends AppCompatActivity implements
     /**
      * Loads page data including the radar chart used to display information about character attributes.
      * The radar chart is taken from a library called MPCharting - example code available @ https://github.com/PhilJay/MPAndroidChart
+     *
      * @param savedInstanceState
      */
     @Override
@@ -67,9 +69,9 @@ public class CharacterSheet extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         mDbOpenHelper = new CampusQuestOpenHelper(this);
-        getLoaderManager().initLoader(LOADER_STATS,null, this);
+        getLoaderManager().initLoader(LOADER_STATS, null, this);
 
-        mSpinner= findViewById(R.id.spinner);
+        mSpinner = findViewById(R.id.spinner);
         buildSpinner();
         mSpinner.setOnItemSelectedListener(this);
 
@@ -77,7 +79,7 @@ public class CharacterSheet extends AppCompatActivity implements
         TextView name = findViewById(R.id.username_label);
         name.setText(getCurrentUser());
 
-        drawer = DrawerUtil.getDrawer(this,toolbar);
+        drawer = DrawerUtil.getDrawer(this, toolbar);
 
         // Create and configure radar chart for displaying stats.
         mChart = findViewById(R.id.stats_chart);
@@ -98,7 +100,7 @@ public class CharacterSheet extends AppCompatActivity implements
         xAxis.setValueFormatter(new IAxisValueFormatter() {
 
             // Define attributes
-            private String[] attribs = new String[] {"Strength", "Intelligence", "Endurance"};
+            private String[] attribs = new String[]{"Strength", "Intelligence", "Endurance"};
 
             @Override
             public String getFormattedValue(float value, AxisBase axis) {
@@ -109,7 +111,7 @@ public class CharacterSheet extends AppCompatActivity implements
         xAxis.setTextColor(Color.WHITE);
 
         // Customise y axis
-        YAxis yAxis  = mChart.getYAxis();
+        YAxis yAxis = mChart.getYAxis();
         yAxis.setLabelCount(ATTRIBS, false);
         yAxis.setTextSize(20f);
         // add to define max and min for y
@@ -180,7 +182,8 @@ public class CharacterSheet extends AppCompatActivity implements
         data.setValueTextColor(Color.WHITE);
 
         mChart.setData(data);
-        mChart.invalidate();;
+        mChart.invalidate();
+        ;
     }
 
     /**
@@ -189,15 +192,42 @@ public class CharacterSheet extends AppCompatActivity implements
 
     private void buildSpinner() {
         List<String> races = Arrays.asList("Gunslinger", "Elf", "Ninja", "Wizard");
-        ArrayAdapter adapter= new ArrayAdapter(this, R.layout.spinner_item, races);
+        ArrayAdapter adapter = new ArrayAdapter(this, R.layout.spinner_item, races);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mSpinner.setAdapter(adapter);
     }
 
+    /**
+     * Changes the avatar picture on item selected.
+     *
+     * @param parent
+     * @param view
+     * @param position
+     * @param id
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         mSelected = (String) parent.getItemAtPosition(position);
+        ImageView img = findViewById(R.id.avatar);
+        // Change avatar to selected item.
+        switch (mSelected) {
+            case "Gunslinger":
+                img.setImageResource(R.drawable.gunslinger);
+                break;
+            case "Elf":
+                img.setImageResource(R.drawable.elf);
+                break;
+            case "Ninja":
+                img.setImageResource(R.drawable.ninja);
+                break;
+            case "Wizard":
+                img.setImageResource(R.drawable.wizard);
+                break;
+            default:
+                img.setImageResource(R.drawable.gunslinger);
+        }
     }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
@@ -223,6 +253,7 @@ public class CharacterSheet extends AppCompatActivity implements
 
     /**
      * Create database loader for user character table.
+     *
      * @return CursorLoader
      */
     @SuppressLint("StaticFieldLeak")
@@ -234,7 +265,7 @@ public class CharacterSheet extends AppCompatActivity implements
 
                 String name = getCurrentUser();
                 //String name = "testname"; // retrieve test data
-                String selection = UserCharacterInfoEntry.COLUMN_USERNAME+ " = ?";
+                String selection = UserCharacterInfoEntry.COLUMN_USERNAME + " = ?";
                 String[] selectionArgs = {name};
 
                 String[] statColumns = {
@@ -245,22 +276,23 @@ public class CharacterSheet extends AppCompatActivity implements
                         UserCharacterInfoEntry.COLUMN_ENDURANCE};
 
                 return db.query(UserCharacterInfoEntry.TABLE_NAME, statColumns,
-                        selection, selectionArgs, null, null,  UserCharacterInfoEntry.COLUMN_COMPLETION_DATE + " DESC");
+                        selection, selectionArgs, null, null, UserCharacterInfoEntry.COLUMN_COMPLETION_DATE + " DESC");
             }
         };
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        if(loader.getId()==LOADER_STATS)
+        if (loader.getId() == LOADER_STATS)
             loadCharStats(data);
     }
 
     /**
      * Loads player character stats from database
+     *
      * @param data
      */
-    private void loadCharStats (Cursor data) {
+    private void loadCharStats(Cursor data) {
         mStatsCursor = data;
 
         if (mStatsCursor.getCount() > 0) {
@@ -269,7 +301,7 @@ public class CharacterSheet extends AppCompatActivity implements
             int strPos = mStatsCursor.getColumnIndex(UserCharacterInfoEntry.COLUMN_STRENGTH);
             int endPos = mStatsCursor.getColumnIndex(UserCharacterInfoEntry.COLUMN_ENDURANCE);
 
-            mStatsCursor .moveToNext();
+            mStatsCursor.moveToNext();
             mLevel = mStatsCursor.getInt(levelPos);
             mStrength = mStatsCursor.getInt(intelPos);
             mEndurance = mStatsCursor.getInt(strPos);
@@ -289,7 +321,9 @@ public class CharacterSheet extends AppCompatActivity implements
 
     }
 
-    /** Returns current user */
+    /**
+     * Returns current user
+     */
     public String getCurrentUser() {
         DataManager data = getInstance();
         return data.getCurrentUserName();

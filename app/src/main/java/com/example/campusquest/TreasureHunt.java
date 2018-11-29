@@ -93,7 +93,7 @@ public class TreasureHunt extends AppCompatActivity implements
     private String mClueText;
     private String mClueId;
 
-    private static final float distanceThreshold = 10f;
+    private static final float distanceThreshold = 50f;
     private OnDataPointListener mListener;
     private float mClueLat;
     private float mClueLong;
@@ -557,6 +557,11 @@ public class TreasureHunt extends AppCompatActivity implements
             loadNewClue(data);
     }
 
+    /**
+     * Retrieves next clue from the database.
+     * @param data
+     */
+
     private void loadNewClue(Cursor data) {
         mClueCursor = data;
 
@@ -576,6 +581,10 @@ public class TreasureHunt extends AppCompatActivity implements
         displayClue();
 
     }
+
+    /**
+     * Displays the current clue.
+     */
 
     private void displayClue() {
         TextView clueValue = findViewById(R.id.clue);
