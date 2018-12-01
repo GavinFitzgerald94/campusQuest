@@ -27,7 +27,7 @@ public class DatabaseDataWorker {
         insertClue("CL01", "QU01", "Go here to celebrate the end of days.", 53.308400f, -6.221913f, 1);
         insertClue("CL02", "QU01", "UCD's sorting hat.", 53.306741f, -6.221380f, 2);
         insertClue("CL03", "QU01", "A modern day tower of babel.", 53.306220f, -6.220468f, 3);
-        insertClue("CL04", "QU01", "Alexandria was famous for having one of these.", 53.305928f, -6.224306f, 4);
+        insertClue("CL04", "QU01", "Alexandria was famous\nfor having one of these.", 53.305928f, -6.224306f, 4);
         insertClue("CL05", "QU01", "West of dinosaur bones.", 53.308320f, -6.225765f, 5);
     }
 
